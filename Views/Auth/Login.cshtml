@@ -1,0 +1,13 @@
+﻿@model ErmakovAppDiplom.Models.ViewModel.LoginViewModel
+<h2>Вход</h2>
+<form asp-action="Login" method="post">
+    <label>Username:</label>
+    <input asp-for="Username" />
+    <span asp-validation-for="Username"></span>
+    <br />
+    <label>Пароль:</label>
+    <input asp-for="Password" type="password" />
+    <span asp-validation-for="Password"></span>
+    <br />
+    <button type="submit">Войти</button>
+</form>

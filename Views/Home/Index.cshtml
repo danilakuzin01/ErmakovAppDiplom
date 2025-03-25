@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var username = ViewData["Username"] as string;
+}
+
+<div class="text-center">
+
+    @if(User.Identity.IsAuthenticated){
+        <h1>
+            Здарова, @username
+        </h1>
+    }
+    @if (User.Identity.IsAuthenticated) {
+        <a asp-action="Logout" asp-controller="Auth">Выход</a>
+    }else{
+        <a asp-action="Register" asp-controller="Auth">Регистрация</a>
+        <a asp-action="Login" asp-controller="Auth">Вход</a>
+    }
+
+</div>

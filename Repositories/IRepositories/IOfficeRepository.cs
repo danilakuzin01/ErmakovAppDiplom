@@ -8,6 +8,6 @@ namespace ErmakovAppDiplom.Repositories.IRepositories
         Office GetById(int id);
         void Create(Office office);
         void Update(Office office);
-        void Delete(Office office);
+        void Delete(int id);
     }
 }

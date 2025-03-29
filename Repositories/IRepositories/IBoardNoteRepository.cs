@@ -8,6 +8,6 @@ namespace ErmakovAppDiplom.Repositories.IRepositories
         BoardNote GetById(int id);
         void Create(BoardNote boardNote);
         void Update(BoardNote boardNote);
-        void Delete(BoardNote boardNote);
+        void Delete(int id);
     }
 }

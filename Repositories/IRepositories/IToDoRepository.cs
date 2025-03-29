@@ -7,6 +7,6 @@ namespace ErmakovAppDiplom.Repositories.IRepositories
         List<ToDoList> GetAll();
         void Create(ToDoList toDoList);
         void Update(ToDoList toDoList);
-        void Delete(ToDoList toDoList);
+        void Delete(int id);
     }
 }

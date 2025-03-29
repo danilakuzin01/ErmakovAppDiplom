@@ -8,6 +8,6 @@ namespace ErmakovAppDiplom.Repositories.IRepositories
         Section GetById(int id);
         void Create(Section section);
         void Update(Section section);
-        void Delete(Section section);
+        void Delete(int id);
     }
 }

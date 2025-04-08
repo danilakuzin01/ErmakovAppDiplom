@@ -1,5 +1,7 @@
 using ErmakovAppDiplom;
 using ErmakovAppDiplom.Models;
+using ErmakovAppDiplom.Services;
+using ErmakovAppDiplom.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,8 +16,11 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IToDoListService, ToDoListService>();
+
 builder.Services.AddAuthorization();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 var app = builder.Build();
 

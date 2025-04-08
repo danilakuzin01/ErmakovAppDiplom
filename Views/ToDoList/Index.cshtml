@@ -1,0 +1,194 @@
+﻿@using ErmakovAppDiplom.Models;
+@using System.Net
+@model List<ToDoList>
+
+@{
+    ViewData["Title"] = "Список задач";
+}
+
+<h2 class="mb-4">Список задач</h2>
+<!-- Кнопка открытия модального окна -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createToDoModal">
+    Добавить задачу
+</button>
+
+<table class="table table-striped table-bordered align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Статус</th>
+            <th>Пользователь</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@Html.Raw(task.Description)</td>
+                <td>
+                    @switch (task.Status?.ToLower())
+                    {
+                        case "завершено":
+                            <span class="badge bg-success">Завершено</span>
+                            break;
+                        case "в процессе":
+                            <span class="badge bg-warning text-dark">В процессе</span>
+                            break;
+                        case "новое":
+                        default:
+                            <span class="badge bg-secondary">Новое</span>
+                            break;
+                    }
+                </td>
+                <td>
+                    @(task.User != null ? $"{task.User.FirstName} {task.User.LastName}" : "—")
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editToDoModal"
+                            data-id="@task.Id"
+                            data-title="@task.Title" 
+                            data-description="@task.Description"
+                            data-status="@task.Status">
+                        Редактировать
+                    </button>
+                    <a asp-action="Details" asp-route-id="@task.Id" class="btn btn-sm btn-outline-info">Подробнее</a>
+                    <form asp-action="Delete" asp-route-id="@task.Id" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить задачу?')">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Модальное окно -->
+<div class="modal fade" id="createToDoModal" tabindex="-1" aria-labelledby="createToDoModalLabel" aria-hidden="true" >
+    <div class="modal-dialog" style="min-width: 800px">
+        <div class="modal-content">
+            @* Используем Html.BeginForm, чтобы не сбивать основную модель *@
+            @using (Html.BeginForm("Create", "ToDoList", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createToDoModalLabel">Создание новой задачи</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="Title">Заголовок</label>
+                        <input class="form-control" name="Title" id="Title" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="Description">Описание</label>
+                        <textarea class="form-control" name="Description" id="Description"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="Status">Статус</label>
+                        <select class="form-select" name="Status" id="Status">
+                            <option value="Новое">Новое</option>
+                            <option value="В процессе">В процессе</option>
+                            <option value="Завершено">Завершено</option>
+                        </select>
+                    </div>
+                    @* Если ты хочешь выбирать пользователя — добавь здесь DropDown *@
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для редактирования -->
+<div class="modal fade" id="editToDoModal" tabindex="-1" aria-labelledby="editToDoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="min-width: 800px">
+        <div class="modal-content">
+            @using (Html.BeginForm("Edit", "ToDoList", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editToDoModalLabel">Редактирование задачи</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="EditId" name="Id" />
+                    <div class="mb-3">
+                        <label class="form-label" for="Title">Заголовок</label>
+                        <input class="form-control" name="Title" id="EditTitle" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="Description">Описание</label>
+                        <textarea class="form-control" name="Description" id="EditDescription"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="Status">Статус</label>
+                        <select class="form-select" name="Status" id="EditStatus">
+                            <option value="Новое">Новое</option>
+                            <option value="В процессе">В процессе</option>
+                            <option value="Завершено">Завершено</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <!-- Place the first <script> tag in your HTML's <head> -->
+    <script src="https://cdn.tiny.cloud/1/i182elo6ewiccsxzrd9bm7602ldpjrpfoilque1unia3kfia/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
+    <script>
+        tinymce.init({
+          selector: 'textarea',
+          plugins: [
+            // Core editing features
+            'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+            // Your account includes a free trial of TinyMCE premium features
+            // Try the most popular premium features until Apr 22, 2025:
+            'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
+          ],
+          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+          tinycomments_mode: 'embedded',
+          tinycomments_author: 'Author name',
+          mergetags_list: [
+            { value: 'First.Name', title: 'First Name' },
+            { value: 'Email', title: 'Email' },
+          ],
+          ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+        });
+    </script>
+
+    <script>
+        // Слушаем событие открытия модального окна редактирования
+        $('#editToDoModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Кнопка, которая открыла модальное окно
+            var id = button.data('id'); // Получаем id задачи
+            var title = button.data('title'); // Получаем заголовок задачи
+            var description = button.data('description'); // Получаем описание задачи
+            var status = button.data('status'); // Получаем статус задачи
+
+            // Заполняем поля формы данными задачи
+            $('#EditId').val(id);
+            $('#EditTitle').val(title);
+            tinymce.get('EditDescription').setContent(description);
+            $('#EditStatus').val(status);
+        });
+    </script>
+
+}

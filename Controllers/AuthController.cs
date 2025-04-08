@@ -29,7 +29,7 @@
                 var user = new User { 
                     UserName = model.Username, 
                     Email = model.Email, 
-                    FirtName=model.FirtName, 
+                    FirstName=model.FirtName, 
                     LastName=model.LastName, 
                     SecondName=model.SecondName,
                     IsActive = true

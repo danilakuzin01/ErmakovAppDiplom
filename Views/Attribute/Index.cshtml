@@ -1,0 +1,122 @@
+﻿@using Attribute = ErmakovAppDiplom.Models.Attribute
+@model List<Attribute>
+
+@{
+    ViewData["Title"] = "Атрибуты";
+}
+
+<h2 class="mb-4">Атрибуты</h2>
+
+<button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Добавить атрибут</button>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Название</th>
+            <th>Категория</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var attr in Model)
+        {
+            <tr>
+                <td>@attr.Name</td>
+                <td>@attr.Category?.Name</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="openEditModal(@attr.Id)">Редактировать</button>
+                    <form asp-action="Delete" asp-route-id="@attr.Id" method="post" class="d-inline">
+                        <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить атрибут?')">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- МОДАЛЬНОЕ ОКНО СОЗДАНИЯ -->
+<div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form asp-action="Create" asp-controller="Attribute" method="post" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Добавить атрибут</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Название</label>
+                    <input name="Name" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Категория</label>
+                    <select class="form-select" name="CategoryId" id="createCategorySelect"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Создать</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ -->
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form asp-action="Edit" asp-controller="Attribute" method="post" class="modal-content">
+            <input type="hidden" name="Id" id="editId" />
+            <div class="modal-header">
+                <h5 class="modal-title">Редактировать атрибут</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Название</label>
+                    <input type="text" name="Name" id="editName" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Категория</label>
+                    <select class="form-select" name="CategoryId" id="editCategorySelect"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Загружает список категорий в селект
+        function loadCategories(selectId, selectedId = null) {
+            fetch('/Attribute/GetCategories')
+                .then(res => res.json())
+                .then(categories => {
+                    const select = document.getElementById(selectId);
+                    select.innerHTML = '';
+                    categories.forEach(cat => {
+                        const opt = document.createElement('option');
+                        opt.value = cat.id;
+                        opt.text = cat.name;
+                        if (selectedId && cat.id === selectedId) opt.selected = true;
+                        select.appendChild(opt);
+                    });
+                });
+        }
+
+        loadCategories("createCategorySelect");
+
+        // Открыть модалку редактирования
+        function openEditModal(id) {
+            fetch(`/Attribute/GetAttribute/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('editId').value = data.id;
+                    document.getElementById('editName').value = data.name;
+                    loadCategories("editCategorySelect", data.categoryId);
+                    const modal = new bootstrap.Modal(document.getElementById('editModal'));
+                    modal.show();
+                });
+        }
+    </script>
+}

@@ -1,13 +1,13 @@
 ﻿using ErmakovAppDiplom.Models;
-using ErmakovAppDiplom.Services.Interfaces;
+using ErmakovAppDiplom.Repositories.IRepositories;
 
-namespace ErmakovAppDiplom.Services
+namespace ErmakovAppDiplom.Repositories
 {
-    public class UserService : IUserService
+    public class UserRepository : IUserRepository
     {
         private AppDbContext _context;
 
-        public UserService(AppDbContext context)
+        public UserRepository(AppDbContext context)
         {
             _context = context;
         }

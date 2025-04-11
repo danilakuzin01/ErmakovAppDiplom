@@ -1,8 +1,8 @@
 ﻿using ErmakovAppDiplom.Models;
 
-namespace ErmakovAppDiplom.Services.Interfaces
+namespace ErmakovAppDiplom.Repositories.IRepositories
 {
-    public interface IUserService
+    public interface IUserRepository
     {
         List<User> GetAll();
         User GetByUsername(string userName);

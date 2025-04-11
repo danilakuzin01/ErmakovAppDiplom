@@ -1,8 +1,8 @@
 ﻿using ErmakovAppDiplom.Models;
 
-namespace ErmakovAppDiplom.Services.Interfaces
+namespace ErmakovAppDiplom.Repositories.IRepositories
 {
-    public interface IToDoListService
+    public interface IToDoListRepository
     {
         List<ToDoList> GetAll();
         ToDoList GetById(int id);

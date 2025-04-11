@@ -1,14 +1,14 @@
-﻿using ErmakovAppDiplom.Services;
-using ErmakovAppDiplom.Services.Interfaces;
+﻿using ErmakovAppDiplom.Repositories.IRepositories;
+using ErmakovAppDiplom.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ErmakovAppDiplom.Controllers
 {
     public class UserAdminController : Controller
     {
-        private IUserService _userService;
+        private IUserRepository _userService;
 
-        public UserAdminController(IUserService userService)
+        public UserAdminController(IUserRepository userService)
         {
             _userService = userService;
         }

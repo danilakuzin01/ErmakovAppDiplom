@@ -1,5 +1,7 @@
 ﻿using ErmakovAppDiplom.Models;
 using ErmakovAppDiplom.Repositories.IRepositories;
+using Microsoft.EntityFrameworkCore;
+using Attribute = ErmakovAppDiplom.Models.Attribute;
 
 namespace ErmakovAppDiplom.Repositories
 {
@@ -12,7 +14,7 @@ namespace ErmakovAppDiplom.Repositories
             _context = context;
         }
 
-        public void Create(Models.Attribute attribute)
+        public void Create(Attribute attribute)
         {
             _context.Attributes.Add(attribute);
             _context.SaveChanges();
@@ -21,7 +23,7 @@ namespace ErmakovAppDiplom.Repositories
         public void Delete(int id)
         {
 
-            Models.Attribute? attribute = _context.Attributes.FirstOrDefault(a => a.Id == id);
+            Attribute? attribute = _context.Attributes.FirstOrDefault(a => a.Id == id);
             if (attribute != null)
             {
                 _context.Attributes.Remove(attribute);
@@ -29,17 +31,17 @@ namespace ErmakovAppDiplom.Repositories
             }
         }
 
-        public List<Models.Attribute> GetAll()
+        public List<Attribute> GetAll()
         {
-            return _context.Attributes.ToList();
+            return _context.Attributes.Include(c => c.Category).Include(c => c.Category).ToList();
         }
 
-        public Models.Attribute GetById(int id)
+        public Attribute GetById(int id)
         {
-            return _context.Attributes.FirstOrDefault(a => a.Id.Equals(id));
+            return _context.Attributes.Include(c => c.Category).FirstOrDefault(a => a.Id.Equals(id));
         }
 
-        public void Update(Models.Attribute attribute)
+        public void Update(Attribute attribute)
         {
             _context.Attributes.Update(attribute);
             _context.SaveChanges();

@@ -1,15 +1,15 @@
 ﻿using ErmakovAppDiplom.Models;
-using ErmakovAppDiplom.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using ErmakovAppDiplom.Repositories.IRepositories;
 
 namespace ErmakovAppDiplom.Controllers
 {
     public class ToDoListController : Controller
     {
 
-        private IToDoListService _todolistService;
+        private IToDoListRepository _todolistService;
 
-        public ToDoListController(IToDoListService toDoListService)
+        public ToDoListController(IToDoListRepository toDoListService)
         {
             _todolistService = toDoListService;
         }

@@ -1,14 +1,14 @@
 ﻿using ErmakovAppDiplom.Models;
-using ErmakovAppDiplom.Services.Interfaces;
+using ErmakovAppDiplom.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace ErmakovAppDiplom.Services
 {
-    public class ToDoListService : IToDoListService
+    public class ToDoListRepository : IToDoListRepository
     {
         private AppDbContext _context;
 
-        public ToDoListService(AppDbContext context)
+        public ToDoListRepository(AppDbContext context)
         {
             _context = context;
         }

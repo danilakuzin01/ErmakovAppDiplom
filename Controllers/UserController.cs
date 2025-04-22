@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ErmakovAppDiplom.Controllers
 {
-    public class UserAdminController : Controller
+    public class UserController : Controller
     {
         private IUserRepository _userService;
 
-        public UserAdminController(IUserRepository userService)
+        public UserController(IUserRepository userService)
         {
             _userService = userService;
         }

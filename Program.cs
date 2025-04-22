@@ -20,6 +20,7 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IAttributeRepository, AttributeRepository>();
+builder.Services.AddScoped<IEquipmentItemRepository, EquipmentItemRepository>();
 builder.Services.AddScoped<IToDoListRepository, ToDoListRepository>();
 
 builder.Services.AddAuthorization();

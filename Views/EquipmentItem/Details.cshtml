@@ -1,0 +1,42 @@
+﻿@model EquipmentItem
+@{
+    ViewData["Title"] = "Подробности сотрудника";
+}
+
+<h2>@Model.Name</h2>
+
+<div>
+    <h3>Категория: @Model.Category?.Name</h3>
+</div>
+
+<h4>Атрибуты сотрудника:</h4>
+<ul>
+    @foreach (var attr in ViewBag.Attributes)
+    {
+        <li>@attr.Name
+            <form method="post" asp-action="DeleteAttribute" asp-route-staffId="@Model.Id" asp-route-attributeId="@attr.Id" class="d-inline">
+                <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
+            </form>
+        </li>
+    }
+</ul>
+
+<h4>Добавить атрибут:</h4>
+<form method="post" asp-action="CreateAttribute" asp-route-staffId="@Model.Id">
+    <div class="mb-3">
+        <label for="attributeSelect" class="form-label">Выберите атрибут</label>
+        <select class="form-select" name="attributeId" id="attributeSelect">
+            @foreach (var attr in ViewBag.Attributes)
+            {
+                <option value="@attr.Id">@attr.Name</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Добавить атрибут</button>
+</form>
+
+<hr>
+
+<form method="post" asp-action="Delete" asp-route-id="@Model.Id">
+    <button type="submit" class="btn btn-outline-danger">Удалить сотрудника</button>
+</form>

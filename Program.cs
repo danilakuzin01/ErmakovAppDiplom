@@ -13,9 +13,21 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // –егистраци€ Identity с кастомным User
-builder.Services.AddIdentity<User, IdentityRole>()
+builder.Services.AddIdentity<User, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false; // если подтверждение аккаунта не требуетс€
+})
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
+
+// Ќастраиваем куки дл€ аутентификации
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Auth/Login"; // путь на страницу логина
+    options.AccessDeniedPath = "/Auth/AccessDenied"; // путь на страницу отказа в доступе
+    options.ExpireTimeSpan = TimeSpan.FromDays(14); // врем€ жизни куки
+    options.SlidingExpiration = true;
+});
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

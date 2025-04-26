@@ -1,13 +1,171 @@
 ﻿@model ErmakovAppDiplom.Models.ViewModel.LoginViewModel
-<h2>Вход</h2>
-<form asp-action="Login" method="post">
-    <label>Username:</label>
-    <input asp-for="Username" />
-    <span asp-validation-for="Username"></span>
-    <br />
-    <label>Пароль:</label>
-    <input asp-for="Password" type="password" />
-    <span asp-validation-for="Password"></span>
-    <br />
-    <button type="submit">Войти</button>
-</form>
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ErmakovAppDiplom</title>
+    <link href="~/css/index.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ErmakovAppDiplom.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="formContainer">
+
+        <form asp-action="Login" method="post" class="loginForm">
+            <div style="margin-bottom: 2rem; text-align: center;">
+                <h1>АВТОПАРТНЕР</h1>
+                <p>Система управления IT-инфраструктурой</p>
+            </div>
+            
+            <div class="form">
+
+                <div class="formTitle">
+                    <h3 style="margin: 0">Вход в систему</h3>
+                    <p style="margin: 0">Введите ваши учетные данные для входа</p>
+                </div>
+                <div style="padding: 1.5rem; padding-top: 0">
+                    <div class="form-input">
+                        <label>Username:</label>
+                        <input asp-for="Username" />
+                        <span asp-validation-for="Username"></span>
+                    </div>
+                    <div class="form-input">
+                        <label>Пароль:</label>
+                        <input asp-for="Password" type="password" />
+                        <span asp-validation-for="Password"></span>
+                    </div>
+                </div>
+
+                <div style="padding: 1.5rem">
+                    <button type="submit" class="submit-button">Войти</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <style>
+        .loginForm {
+            max-width: 28rem;
+        }
+
+        .formContainer {
+            -webkit-text-size-adjust: 100%;
+            tab-size: 4;
+            font-feature-settings: normal;
+            font-variation-settings: normal;
+            -webkit-tap-highlight-color: transparent;
+            line-height: inherit;
+            color: hsl(var(--foreground));
+            box-sizing: border-box;
+            border-width: 0;
+            border-style: solid;
+            border-color: hsl(var(--border));
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+            padding: 1rem;
+        }
+
+        h1{
+            color: rgb(30,58,138);
+            font-weight: 700;
+            font-size: 1.875rem;
+            line-height: 2.25rem;
+        }
+
+        p{
+            color: rgb(75,85,99);
+            margin-top: .5rem;
+        }
+
+        input{
+            -webkit-text-size-adjust: 100%;
+            tab-size: 4;
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+            border-style: solid;
+            font-feature-settings: inherit;
+            font-variation-settings: inherit;
+            font-weight: inherit;
+            letter-spacing: inherit;
+            color: inherit;
+            margin: 0;
+            display: flex;
+            height: 2.5rem;
+            width: 100%;
+            border-radius: calc(var(--radius) - 2px);
+            border-width: 1px;
+            border-color: hsl(var(--input));
+            background-color: hsl(var(--background));
+            padding-left: .75rem;
+            padding-right: .75rem;
+            padding-top: .5rem;
+            padding-bottom: .5rem;
+            font-size: .875rem;
+            line-height: 1.25rem;
+            margin-top: calc(.5rem * calc(1 - var(--tw-space-y-reverse)));
+            margin-bottom: calc(.5rem * var(--tw-space-y-reverse));
+        }
+
+        .form{
+            tab-size: 4;
+            font-feature-settings: normal;
+            font-variation-settings: normal;
+            line-height: inherit;
+            box-sizing: border-box;
+            border-style: solid;
+            border-color: hsl(var(--border));
+            border-radius: var(--radius);
+            border-width: 1px;
+            background-color: hsl(var(--card));
+            color: hsl(var(--card-foreground));
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow);
+        }
+
+        .formTitle {
+            -webkit-text-size-adjust: 100%;
+            tab-size: 4;
+            font-feature-settings: normal;
+            font-variation-settings: normal;
+            -webkit-tap-highlight-color: transparent;
+            line-height: inherit;
+            color: hsl(var(--card-foreground));
+            box-sizing: border-box;
+            border-width: 0;
+            border-style: solid;
+            border-color: hsl(var(--border));
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+        }
+
+        .form-input{
+            -webkit-text-size-adjust: 100%;
+            tab-size: 4;
+            font-feature-settings: normal;
+            font-variation-settings: normal;
+            -webkit-tap-highlight-color: transparent;
+            line-height: inherit;
+            --tw-bg-opacity: 1;
+            color: hsl(var(--card-foreground));
+            box-sizing: border-box;
+            border-width: 0;
+            border-style: solid;
+            border-color: hsl(var(--border));
+        }
+    </style>
+</body>
+</html>

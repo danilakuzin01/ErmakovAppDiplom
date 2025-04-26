@@ -1,15 +1,19 @@
 ﻿using ErmakovAppDiplom.Models;
 using ErmakovAppDiplom.Repositories.IRepositories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ErmakovAppDiplom.Repositories
 {
     public class UserRepository : IUserRepository
     {
         private AppDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public UserRepository(AppDbContext context)
+        public UserRepository(AppDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public void Create(User user)

@@ -1,25 +1,34 @@
 ﻿using System.Diagnostics;
 using ErmakovAppDiplom.Models;
+using ErmakovAppDiplom.Repositories.IRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ErmakovAppDiplom.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<User> _userManager;
+        private readonly IUserRepository _userRepository;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<User> userManager)
+        public HomeController(ILogger<HomeController> logger, UserManager<User> userManager, IUserRepository userRepository)
         {
             _logger = logger;
             _userManager = userManager;
+            _userRepository = userRepository;
         }
 
         public async Task<IActionResult> Index()
         {
             // Получаем текущего пользователя
             var user = await _userManager.GetUserAsync(User);
+
+            ViewBag.UsersCount = _userRepository.GetAll().Count;
+            ViewBag.AdminsCount = _userManager.GetUsersInRoleAsync("Admin").Result.Count;
+
             if (user != null)
             {
                 // Передаем FirstName в View

@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using ErmakovAppDiplom.Models;
 using Attribute = ErmakovAppDiplom.Models.Attribute;
 using ErmakovAppDiplom.Models.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ErmakovAppDiplom.Controllers
 {
+    [Authorize]
     public class AttributeController : Controller
     {
         private readonly IAttributeRepository _attributeRepository;

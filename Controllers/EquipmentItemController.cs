@@ -1,9 +1,11 @@
 ﻿using ErmakovAppDiplom.Models;
 using ErmakovAppDiplom.Repositories.IRepositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ErmakovAppDiplom.Controllers
 {
+    [Authorize]
     public class EquipmentItemController : Controller
     {
         private readonly IEquipmentItemRepository _repository;

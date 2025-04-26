@@ -1,9 +1,11 @@
 ﻿using ErmakovAppDiplom.Models;
 using Microsoft.AspNetCore.Mvc;
 using ErmakovAppDiplom.Repositories.IRepositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ErmakovAppDiplom.Controllers
 {
+    [Authorize]
     public class ToDoListController : Controller
     {
 

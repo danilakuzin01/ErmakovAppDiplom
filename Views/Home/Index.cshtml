@@ -72,6 +72,112 @@
         </div>
     </div>
 
+    <div class="main-dashboard">
+        <div class="dashboard-card">
+            <div class="dashboard-card-title">
+                <div>
+                    <h3>Объявления</h3>
+                    <p>Важная информация для сотрудников</p>
+                </div>
+                <button class="dashboard-card-button">
+                    <svg style="color: black" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus h-4 w-4 mr-1" data-component-line="197" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20mr-1%22%7D"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+                    Добавить
+                </button>
+            </div>
+
+            <div class="dashboard-card-body">
+
+                <!-- Обернуть в цикл -->
+                <div class="dashboard-card-advertisement">
+                    <div class="dashboard-card-advertisement-container">
+                        <div class="advertisement-head">
+                            <h3 class="advertisement-title">Плановые работы на сервере</h3>
+                            <span class="advertisement-date">2025-04-25</span>
+                        </div>
+                        <p class="advertisement-text">
+                            Уважаемые коллеги! 28 апреля с 22:00 до 23:00 будут проводиться плановые технические работы на сервере. Возможны кратковременные перебои в работе корпоративных приложений.
+                        </p>
+                        <div class="advertisement-author">
+                            Автор: Системный администратор
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card-advertisement">
+                    <div class="dashboard-card-advertisement-container">
+                        <div class="advertisement-head">
+                            <h3 class="advertisement-title">Плановые работы на сервере</h3>
+                            <span class="advertisement-date">2025-04-25</span>
+                        </div>
+                        <p class="advertisement-text">
+                            Уважаемые коллеги! 28 апреля с 22:00 до 23:00 будут проводиться плановые технические работы на сервере. Возможны кратковременные перебои в работе корпоративных приложений.
+                        </p>
+                        <div class="advertisement-author">
+                            Автор: Системный администратор
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="dashboard-card">
+            <div class="dashboard-card-title">
+                <div>
+                    <h3>Задачи</h3>
+                    <p>Текущие задания для IT-отдела</p>
+                </div>
+                <button class="dashboard-card-button">
+                    <svg style="color: black" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus h-4 w-4 mr-1" data-component-line="197" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20mr-1%22%7D"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+                    Добавить
+                </button>
+            </div>
+            <div class="dashboard-card-body">
+                <div>
+                    <div class="task-tab-list">
+                        <button class="task-tab-button active" data-tab="all" role="tab" aria-selected="true">Все</button>
+                        <button class="task-tab-button" role="tab" data-tab="inprogress">В работе</button>
+                        <button class="task-tab-button" role="tab" data-tab="completed">Выполнено</button>
+                    </div>
+                </div>
+
+                <div id="tabContents">
+                    <div class="task-tab-content active" id="tab-all">
+                        <div class=task-record>
+                            <div class="task-record-container">
+                                <div class="task-record-head">
+                                    <div>
+                                        <h4>Настройка сетевого принтера</h4>
+                                        <p>Настроить сетевой принтер в отделе бухгалтерии, комната 305</p>
+                                    </div>
+                                    <div class="task-record-difficult medium">
+                                        Средний
+                                    </div>
+                                </div>
+                                <div class="task-record-date-status">
+                                    <span class="task-record-date">Срок: 2025-04-27</span>
+                                    <div class="task-record-status inprogress">В процессе</div>
+                                </div>
+                                <button class="task-record-button">
+                                    <svg style="color: black" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check h-4 w-4 mr-1" data-lov-id="src/pages/Dashboard.tsx:275:26" data-lov-name="Check" data-component-path="src/pages/Dashboard.tsx" data-component-line="275" data-component-file="Dashboard.tsx" data-component-name="Check" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20mr-1%22%7D"><path d="M20 6 9 17l-5-5"></path></svg>
+                                    Отметить как выполненное
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="task-tab-content" id="tab-inprogress">
+                        <p>Задачи в работе.</p>
+                    </div>
+                    <div class="task-tab-content" id="tab-completed">
+                        <p>Выполненные задачи.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     @* @if (User.Identity.IsAuthenticated)
     {
         <a asp-action="Logout" asp-controller="Auth">Выход</a>
@@ -83,3 +189,24 @@
     } *@
 
 </div>
+
+@section Scripts{
+    <script>
+        document.querySelectorAll('.task-tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                // Меняем активную кнопку
+                document.querySelectorAll('.task-tab-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                // Меняем активное содержимое
+                const tab = button.getAttribute('data-tab');
+
+                document.querySelectorAll('.task-tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                document.getElementById('tab-' + tab).classList.add('active');
+            });
+        });
+    </script>
+}

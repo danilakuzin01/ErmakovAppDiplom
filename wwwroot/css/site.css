@@ -49,6 +49,7 @@ button{
     cursor: pointer;
 }
 
+
 a {
     text-decoration: none;
     color: #9ca3af;
@@ -185,6 +186,18 @@ main {
     }
 }
 
+.login-input {
+    margin-top: calc(.5rem* calc(1 - 0));
+    margin-bottom: calc(.5rem* 0);
+    font-size: .875rem;
+    line-height: 1.25rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    border-radius: calc(.5rem - 2px);
+    width: 100%;
+    height: 2.5rem;
+}
+
 @media (prefers-reduced-motion: no-preference) {
     a:nth-of-type(2) .logo {
         animation: logo-spin infinite 20s linear;
@@ -219,9 +232,9 @@ main {
     justify-content: center;
     gap: .5rem;
     white-space: nowrap;
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: calc(.5rem - 2px);
     --tw-bg-opacity: 1;
-    background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+    background-color: rgb(59,130,246);
     padding-left: 1rem;
     padding-right: 1rem;
     padding-top: .5rem;

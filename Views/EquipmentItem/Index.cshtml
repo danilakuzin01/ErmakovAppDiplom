@@ -1,0 +1,212 @@
+﻿@model List<EquipmentItem>
+@using ErmakovAppDiplom.Repositories.IRepositories;
+@inject ICategoryRepository categoryRepository
+
+@{
+    ViewData["Title"] = "Инвентарь";
+    var categories = categoryRepository.GetAll();
+}
+<head>
+    <link href="~/css/equipment.css" rel="stylesheet" />
+
+
+    <!-- icons -->
+    <!-- ПК -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="icon-computer" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </symbol>
+    </svg>
+
+    <!-- Сервер -->
+    <symbol id="icon-server" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+    </symbol>
+
+    <!-- Сетевое оборудование -->
+    <symbol id="icon-internet-settings" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+    </symbol>
+
+    <!-- Принтер -->
+    <symbol id="icon-printer" viewBox="0 0 24 24">
+        <path d="M7 18H6.2C5.0799 18 4.51984 18 4.09202 17.782C3.71569 17.5903 3.40973 17.2843 3.21799 16.908C3 16.4802 3 15.9201 3 14.8V10.2C3 9.0799 3 8.51984 3.21799 8.09202C3.40973 7.71569 3.71569 7.40973 4.09202 7.21799C4.51984 7 5.0799 7 6.2 7H7M17 18H17.8C18.9201 18 19.4802 18 19.908 17.782C20.2843 17.5903 20.5903 17.2843 20.782 16.908C21 16.4802 21 15.9201 21 14.8V10.2C21 9.07989 21 8.51984 20.782 8.09202C20.5903 7.71569 20.2843 7.40973 19.908 7.21799C19.4802 7 18.9201 7 17.8 7H17M7 11H7.01M17 7V5.4V4.6C17 4.03995 17 3.75992 16.891 3.54601C16.7951 3.35785 16.6422 3.20487 16.454 3.10899C16.2401 3 15.9601 3 15.4 3H8.6C8.03995 3 7.75992 3 7.54601 3.10899C7.35785 3.20487 7.20487 3.35785 7.10899 3.54601C7 3.75992 7 4.03995 7 4.6V5.4V7M17 7H7M8.6 21H15.4C15.9601 21 16.2401 21 16.454 20.891C16.6422 20.7951 16.7951 20.6422 16.891 20.454C17 20.2401 17 19.9601 17 19.4V16.6C17 16.0399 17 15.7599 16.891 15.546C16.7951 15.3578 16.6422 15.2049 16.454 15.109C16.2401 15 15.9601 15 15.4 15H8.6C8.03995 15 7.75992 15 7.54601 15.109C7.35785 15.2049 7.20487 15.3578 7.10899 15.546C7 15.7599 7 16.0399 7 16.6V19.4C7 19.9601 7 20.2401 7.10899 20.454C7.20487 20.6422 7.35785 20.7951 7.54601 20.891C7.75992 21 8.03995 21 8.6 21Z"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </symbol>
+
+
+</head>
+<div>
+    <div class="main-content">
+        <div class="content-header">
+            <div>
+                <h3>Оборудование</h3>
+                <p>Управление всем оборудованием компании</p>
+            </div>
+            <button>
+                <svg width="1rem" height="1rem" class="w-6 h-6 text-red-500">
+                    <use href="#icon-plus"></use>
+                </svg>
+                Добавить оборудование
+            </button>
+        </div>
+        <div class="content-body">
+            <div class="filter-content">
+                <div class="filter-search-container">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" data-lov-id="src/pages/Equipment.tsx:409:14" data-lov-name="Search" data-component-path="src/pages/Equipment.tsx" data-component-line="409" data-component-file="Equipment.tsx" data-component-name="Search" data-component-content="%7B%22className%22%3A%22absolute%20left-3%20top-1%2F2%20transform%20-translate-y-1%2F2%20text-gray-400%20h-4%20w-4%22%7D"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                    <input class="filter-search-container-input" type="type" name="name" value="" placeholder="Поиск по названию, модели, инвентарному номеру..." />
+                </div>
+                <div style="display: flex; gap: .5rem;">
+                    <div class="filter-status-button-container">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter h-4 w-4 text-gray-400" data-lov-id="src/pages/Equipment.tsx:419:16" data-lov-name="Filter" data-component-path="src/pages/Equipment.tsx" data-component-line="419" data-component-file="Equipment.tsx" data-component-name="Filter" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20text-gray-400%22%7D"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                        <select class="types-select">
+                            <option value="all">Все статусы</option>
+                            <option value="status1">Работает</option>
+                            <option value="status2">На обслуживании</option>
+                            <option value="status3">Неисправен</option>
+                        </select>
+                    </div>
+                    <select class="types-select">
+                        <option value="all">Все типы</option>
+                        <option value="type1">Компьютер</option>
+                        <option value="type2">Монитор</option>
+                        <option value="type3">Принтер</option>
+                        <option value="type4">Сервер</option>
+                        <option value="type5">Сетевое оборудование</option>
+                    </select>
+                </div>
+            </div>
+            <div class="content">
+                <div class="equipment-tab-list">
+                    <button class="task-tab-button active" data-tab="spisok" role="tab" aria-selected="true">Список</button>
+                    <button class="task-tab-button" role="tab" data-tab="plitka">Плитка</button>
+                </div>
+                <div id="tabContents">
+                    <div class="task-tab-content active" id="tab-spisok">
+                        <table class="table-spisok">
+                            <thead>
+                                <tr>
+                                    <th>Тип</th>
+                                    <th>Название/Модель</th>
+                                    <th>Инв. номер</th>
+                                    <th>Статус</th>
+                                    <th>Местоположение</th>
+                                    <th>Сотрудник</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(EquipmentItem item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div style="align-items: center;display: flex;">
+                                                <div class="table-icon">
+                                                    <svg class="w-6 h-6 text-red-500">
+                                                        @if (item.Category.Name.Equals("Компьютер") || item.Category.Name.Equals("Монитор"))
+                                                        {
+                                                            <use href="#icon-computer" />
+                                                        }
+                                                        else if (item.Category.Name.Equals("Принтер")){
+
+                                                            <use href="#icon-printer" />
+                                                        }
+                                                        else if (item.Category.Name.Equals("Сервер")){
+
+                                                            <use href="#icon-server" />
+                                                        }
+                                                        else if (item.Category.Name.Equals("Сетевое оборудование")) {
+
+                                                            <use href="#icon-internet-settings" />
+                                                        }
+                                                    </svg>
+                                                </div>
+                                                <div style="margin-left: 1rem">
+                                                    <div class="equipment-category" style="font-size: .875rem;line-height: 1.25rem;color: black;font-weight: 500;">
+                                                        @item.Category.Name
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="equipment-name">
+                                                @item.Name
+                                            </div>
+                                            <div class="equipment-type">
+                                                @item.Model
+                                            </div>
+                                        </td>
+                                        <td>@item.InventoryNumber</td>
+                                        <td>
+                                            <div class="status-container work">
+                                                @item.Status
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="font-size: .875rem; line-height: 1.25rem; color: black">
+                                                @item.SubLocation.Location.Name
+                                            </div>
+                                            <div style="font-size: .875rem;line-height: 1.25rem;">
+                                                @item.SubLocation.Name
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @item.User.ToString()
+                                        </td>
+                                        <td>
+                                            <button class="table-button edit">
+                                                <svg class="w-4 h-4 text-blue-600 mr-1" width="1rem" height="1rem">
+                                                    <use href="#icon-edit" />
+                                                </svg>
+                                                Изменить
+                                            </button>
+                                            <button class="table-button delete">
+                                                <svg class="w-4 h-4 text-red-600 mr-1" width="1rem" height="1rem">
+                                                    <use href="#icon-trash" />
+                                                </svg>
+                                                Удалить
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="task-tab-content" id="tab-plitka">
+                        плитка
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+                document.querySelectorAll('.task-tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                // Снимаем активность со всех кнопок
+                document.querySelectorAll('.task-tab-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                // Меняем вкладку
+                const tab = button.getAttribute('data-tab');
+
+                document.querySelectorAll('.task-tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                const activeTab = document.getElementById('tab-' + tab);
+                if (activeTab) {
+                    activeTab.classList.add('active');
+                }
+            });
+        });
+
+    </script>
+}

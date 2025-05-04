@@ -1,9 +1,8 @@
 ﻿namespace ErmakovAppDiplom.Models
 {
-    public class Category
+    public class Location
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
-
     }
 }

@@ -1,13 +1,55 @@
 ﻿@model ErmakovAppDiplom.Models.ViewModel.LoginViewModel
-<h2>Вход</h2>
-<form asp-action="Login" method="post">
-    <label>Username:</label>
-    <input asp-for="Username" />
-    <span asp-validation-for="Username"></span>
-    <br />
-    <label>Пароль:</label>
-    <input asp-for="Password" type="password" />
-    <span asp-validation-for="Password"></span>
-    <br />
-    <button type="submit">Войти</button>
-</form>
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ErmakovAppDiplom</title>
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ErmakovAppDiplom.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="formContainer">
+
+        <form asp-action="Login" method="post" class="loginForm">
+            <div style="margin-bottom: 2rem; text-align: center;">
+                <h1>АВТОПАРТНЕР</h1>
+                <p>Система управления IT-инфраструктурой</p>
+            </div>
+            
+            <div class="form" style="width: 448px;">
+
+                <div class="formTitle">
+                    <h3>Вход в систему</h3>
+                    <p style="margin: 0; margin-top: 6px">Введите ваши учетные данные для входа</p>
+                </div>
+                <div style="padding: 1.5rem; padding-top: 0">
+                    <div class="form-input">
+                        <label>Username:</label>
+                        <input class="login-input" asp-for="Username" />
+                        <span asp-validation-for="Username"></span>
+                    </div>
+                    <div class="form-input">
+                        <label>Пароль:</label>
+                        <input class="login-input" asp-for="Password" type="password" />
+                        <span asp-validation-for="Password"></span>
+                    </div>
+                </div>
+
+                <div style="padding: 1.5rem">
+                    <button type="submit" class="submit-button">Войти</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

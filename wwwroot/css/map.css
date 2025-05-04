@@ -1,0 +1,87 @@
+﻿.Card {
+    border-radius: .5rem;
+    border-width: 1px;
+    background-color: white;
+}
+
+.card-header {
+    padding: 1.5rem;
+    padding-bottom: .5rem;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    display: flex;
+}
+    .card-header h3 {
+        letter-spacing: -.025em;
+        font-weight: 600;
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        margin: 0;
+    }
+
+    .card-header p {
+        font-size: .875rem;
+        line-height: 1.25rem;
+        margin: 0;
+        color: #6b7280;
+    }
+.functional-buttons-container {
+    display: flex;
+    gap: .5rem;
+    margin-bottom: .375rem;
+    margin-top: .375rem;
+}
+    .functional-buttons-container button {
+        font-weight: 500;
+        font-size: .875rem;
+        line-height: 1.25rem;
+        padding-top: .5rem;
+        padding-bottom: .5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        background-color: white;
+        border-color: #e2e8f0;
+        border-width: 1px;
+        border-radius: calc(.5rem - 2px);
+        white-space: nowrap;
+        gap: .5rem;
+        justify-content: center;
+        align-items: center;
+        height: 2.5rem;
+        display: inline-flex;
+    }
+.tabs-container {
+    color: #64748b;
+    padding: .25rem;
+    background-color: #f1f5f9;
+    border-radius: calc(.5rem - 2px);
+    justify-content: center;
+    align-items: center;
+    height: 2.5rem;
+    display: grid;
+    margin-bottom: 1rem;
+}
+.floor-button {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-duration: .15s;
+    font-weight: 500;
+    font-size: .875rem;
+    line-height: 1.25rem;
+    padding-top: .375rem;
+    padding-bottom: .375rem;
+    padding-left: .75rem;
+    padding-right: .75rem;
+    border-radius: calc(.5rem - 4px);
+    white-space: nowrap;
+    justify-content: center;
+    align-items: center;
+    display: inline-flex;
+    position: relative;
+}
+    .floor-button.active {
+        color: black;
+        background-color: white;
+        font-weight: 600;
+    }

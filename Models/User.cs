@@ -5,7 +5,7 @@ namespace ErmakovAppDiplom.Models
 {
     public class User: IdentityUser
     {
-        public string FirtName { get; set; }
+        public string FirstName { get; set; }
         public string LastName { get; set; }
         public string SecondName { get; set; }
         public bool IsActive { get; set; }
@@ -14,5 +14,10 @@ namespace ErmakovAppDiplom.Models
         public ICollection<BoardNote> BoardNotesAsOwner { get; set; } = new List<BoardNote>();
         public ICollection<BoardNote> BoardNotesAsReceiver { get; set; } = new List<BoardNote>();
         public List<ToDoList> ToDoList { get; set; }
+
+        public override string ToString()
+        {
+            return $"{LastName} {FirstName}";
+        }
     }
 }

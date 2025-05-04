@@ -16,6 +16,10 @@ namespace ErmakovAppDiplom
         public DbSet<EquipmentItem> EquipmentItems { get; set; }
         public DbSet<EquipmentItemAttribute> ItemAttributes { get; set; }
         public DbSet<ToDoList> ToDoLists { get; set; }
+        public DbSet<TaskModel> Tasks { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<SubLocation> Sublocations { get; set; }
+        public DbSet<Floor> Floors { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }

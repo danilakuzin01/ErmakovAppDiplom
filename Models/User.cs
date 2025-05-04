@@ -14,5 +14,10 @@ namespace ErmakovAppDiplom.Models
         public ICollection<BoardNote> BoardNotesAsOwner { get; set; } = new List<BoardNote>();
         public ICollection<BoardNote> BoardNotesAsReceiver { get; set; } = new List<BoardNote>();
         public List<ToDoList> ToDoList { get; set; }
+
+        public override string ToString()
+        {
+            return $"{LastName} {FirstName}";
+        }
     }
 }

@@ -8,9 +8,50 @@
     @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ErmakovAppDiplom.styles.css" asp-append-version="true" />
+
+
+    <!--icons-->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+
+        <!--  Иконка: плюс (добавить) -->
+        <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+            <path d="M12 5v14"></path>
+        </symbol>
+
+        <!-- Иконка: Карандаш в квадрате (Редактировать) -->
+        <symbol id="icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+        </symbol>
+
+        <!-- Иконка: Мусорка (Удалить) -->
+        <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18" />
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+            <line x1="10" y1="11" x2="10" y2="17" />
+            <line x1="14" y1="11" x2="14" y2="17" />
+        </symbol>
+
+        <!-- Иконка: Кредитная карта -->
+        <symbol id="icon-credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+        </symbol>
+
+        <!-- Иконка: Сетевой график (permissions/settings) -->
+        <symbol id="icon-network" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+        </symbol>
+    </svg>
+
 </head>
 <body>
-    <header> 
+    <header>
         <div class="container header-container">
             <div style="gap: 1.5rem; align-items: center; display: flex">
                 <a asp-action="Index" asp-controller="Home" class="logoLink">
@@ -22,15 +63,15 @@
                         Главная
                     </a>
 
-                    <a class="nav-link">Оборудование</a>
-                    <a class="nav-link">Карта офиса</a>
+                    <a asp-action="Index" asp-controller="EquipmentItem" class="nav-link  @(ViewContext.RouteData.Values["controller"]?.ToString() == "EquipmentItem" ? "active" : "")">Оборудование</a>
+                    <a asp-action="Index" asp-controller="OfficeMap" class="nav-link">Карта офиса</a>
                     <a class="nav-link">Пользователи</a>
                     <a class="nav-link">Настройки</a>
                 </nav>
             </div>
             <div style="align-items: center; display: flex">
                 <div style="display: block">
-                    <svg class="icon search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"  data-component-line="61" data-component-content="%7B%22className%22%3A%22absolute%20left-3%20top-1%2F2%20transform%20-translate-y-1%2F2%20text-gray-400%20h-4%20w-4%22%7D"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                    <svg class="icon search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-component-line="61" data-component-content="%7B%22className%22%3A%22absolute%20left-3%20top-1%2F2%20transform%20-translate-y-1%2F2%20text-gray-400%20h-4%20w-4%22%7D"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
                     <input type="text" name="search" value="" class="search-input" placeholder="Поиск..." />
                 </div>
                 <button class="btn notification-button">
@@ -57,7 +98,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-action="Index" asp-controller="Category">Категории</a>
                             </li>
-                            
+
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-action="Index" asp-controller="EquipmentItem">Инвентарь</a>
                             </li>

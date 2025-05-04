@@ -34,6 +34,8 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IAttributeRepository, AttributeRepository>();
 builder.Services.AddScoped<IEquipmentItemRepository, EquipmentItemRepository>();
 builder.Services.AddScoped<IToDoListRepository, ToDoListRepository>();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<IFloorRepository, FloorRepository>();
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();

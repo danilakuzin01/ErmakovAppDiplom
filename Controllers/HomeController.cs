@@ -13,12 +13,14 @@ namespace ErmakovAppDiplom.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly IUserRepository _userRepository;
-
-        public HomeController(ILogger<HomeController> logger, UserManager<User> userManager, IUserRepository userRepository)
+        private readonly ITaskRepository _taskRepository;
+        public HomeController(ILogger<HomeController> logger, UserManager<User> userManager, 
+            IUserRepository userRepository, ITaskRepository taskRepository)
         {
             _logger = logger;
             _userManager = userManager;
             _userRepository = userRepository;
+            _taskRepository = taskRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -28,6 +30,8 @@ namespace ErmakovAppDiplom.Controllers
 
             ViewBag.UsersCount = _userRepository.GetAll().Count;
             ViewBag.AdminsCount = _userManager.GetUsersInRoleAsync("Admin").Result.Count;
+
+            ViewBag.Tasks = _taskRepository.GetLastFive();
 
             if (user != null)
             {

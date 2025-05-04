@@ -79,9 +79,57 @@
     align-items: center;
     display: inline-flex;
     position: relative;
+    color: #6b7280;
+    font-weight: 600;
 }
     .floor-button.active {
         color: black;
         background-color: white;
-        font-weight: 600;
+        color: black;
     }
+.tab-content{
+    margin-top: .5rem;
+}
+.tab-map-content {
+    height: 600px;
+    width: 100%;
+    background-color: white;
+    border-color: #d1d5db;
+    border-width: 1px;
+    border-radius: .5rem;
+    position: relative;
+}
+.map {
+    background-color: #f9fafb;
+    padding: 1rem;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+}
+    .map .content {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        border-radius: .5rem;
+        border-width: 4px;
+        border-color: #d1d5db;
+        background-color:white;
+
+    }
+.location {
+    border-color: #9ca3af;
+    border-width: 2px;
+    border-radius: calc(.5rem - 2px);
+    position: absolute;
+    background-color: white;
+    cursor: move;
+    z-index: 1;
+}
+.location-name {
+    font-size: .75rem;
+    line-height: 1rem;
+    font-weight: 600;
+    left: .25rem;
+}

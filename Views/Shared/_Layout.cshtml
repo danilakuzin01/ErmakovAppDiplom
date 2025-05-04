@@ -64,7 +64,7 @@
                     </a>
 
                     <a asp-action="Index" asp-controller="EquipmentItem" class="nav-link  @(ViewContext.RouteData.Values["controller"]?.ToString() == "EquipmentItem" ? "active" : "")">Оборудование</a>
-                    <a asp-action="Index" asp-controller="OfficeMap" class="nav-link">Карта офиса</a>
+                    <a asp-action="Index" asp-controller="OfficeMap" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "OfficeMap" ? "active" : "")">Карта офиса</a>
                     <a class="nav-link">Пользователи</a>
                     <a class="nav-link">Настройки</a>
                 </nav>

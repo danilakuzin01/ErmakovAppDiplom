@@ -1,5 +1,6 @@
 ﻿@{
     List<Floor> floors = ViewBag.Floors;
+    List<SubLocation> locations = ViewBag.Locations;
 }
 
 <head>
@@ -57,39 +58,67 @@
         </div>
 
         <div style="padding: 1.5rem; padding-top: 0">
-            <div style="justify-content: space-between;display: flex;margin-bottom: 1rem;">
-               <div style="width: 100%">
+            <div style="justify-content: space-between; display: flex; margin-bottom: 1rem;">
+                <div style="width: 100%">
                     <div class="tabs-container" style="grid-template-columns: repeat(@floors.Count, minmax(0, 1fr))">
                         @foreach (Floor floor in floors)
                         {
-                            <button class="floor-button @(floor.Id.Equals(1) ? "active" : "")" data-tab="floor @floor.Id">@floor.Name</button>
+                            <button class="floor-button @(floor.Id == floors.First().Id ? "active" : "")"
+                                    data-tab="floor @floor.Id">
+                                @floor.Name
+                            </button>
                         }
                     </div>
-               </div>
+                </div>
             </div>
-            <div></div>
 
+            @foreach (Floor floor in floors)
+            {
+                <div class="tab-content @(floor.Id == floors.First().Id ? "active" : "") task-tab-content"
+                     id="tab-floor @floor.Id">
+                    <div class="tab-map-content">
+                        <div class="map">
+                            <div class="content">
+                                @foreach (SubLocation location in locations.Where(l => l.Floor.Id == floor.Id))
+                                {
+                                    <div class="location"
+                                         style="width: @(location.Width)px;
+                                        height: @(location.Height)px;
+                                        top: @(location.PositionY)px;
+                                        left: @(location.PositionX)px;">
+                                        <div class="location-name">
+                                            @location.Name
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
-    </div>
-</div>
 
-@section Scripts {
-    <script>
-        document.querySelectorAll('.floor-button').forEach(button => {
-            button.addEventListener('click', () => {
-                // Меняем активную кнопку
-                document.querySelectorAll('.floor-button').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
+        @section Scripts {
+            <script>
+                document.querySelectorAll('.floor-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        // Активная кнопка
+                        document.querySelectorAll('.floor-button').forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
 
-                // Меняем активное содержимое
-                const tab = button.getAttribute('data-tab');
+                        // Активный контент
+                        const tab = button.getAttribute('data-tab');
 
-                document.querySelectorAll('.task-tab-content').forEach(content => {
-                    content.classList.remove('active');
+                        document.querySelectorAll('.task-tab-content').forEach(content => {
+                            content.classList.remove('active');
+                        });
+
+                        console.log(tab)
+                        const target = document.getElementById('tab-' + tab);
+                        if (target) {
+                            target.classList.add('active');
+                        }
+                    });
                 });
-
-                document.getElementById('tab-' + tab).classList.add('active');
-            });
-        });
-    </script>
-}
+            </script>
+        }

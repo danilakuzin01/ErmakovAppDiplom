@@ -1,37 +1,13 @@
 ﻿@{
     List<Floor> floors = ViewBag.Floors;
     List<SubLocation> locations = ViewBag.Locations;
+    List<Category> categories = ViewBag.Categories;
+    List<EquipmentItem> items = ViewBag.EquipmentItems;
 }
 
 <head>
     <link rel="stylesheet" href="~/css/map.css" />
 
-    <!-- icons -->
-    <!-- ПК -->
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-        <symbol id="icon-computer" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </symbol>
-    </svg>
-
-    <!-- Сервер -->
-    <symbol id="icon-server" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-    </symbol>
-
-    <!-- Сетевое оборудование -->
-    <symbol id="icon-internet-settings" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-    </symbol>
-
-    <!-- Принтер -->
-    <symbol id="icon-printer" viewBox="0 0 24 24">
-        <path d="M7 18H6.2C5.0799 18 4.51984 18 4.09202 17.782C3.71569 17.5903 3.40973 17.2843 3.21799 16.908C3 16.4802 3 15.9201 3 14.8V10.2C3 9.0799 3 8.51984 3.21799 8.09202C3.40973 7.71569 3.71569 7.40973 4.09202 7.21799C4.51984 7 5.0799 7 6.2 7H7M17 18H17.8C18.9201 18 19.4802 18 19.908 17.782C20.2843 17.5903 20.5903 17.2843 20.782 16.908C21 16.4802 21 15.9201 21 14.8V10.2C21 9.07989 21 8.51984 20.782 8.09202C20.5903 7.71569 20.2843 7.40973 19.908 7.21799C19.4802 7 18.9201 7 17.8 7H17M7 11H7.01M17 7V5.4V4.6C17 4.03995 17 3.75992 16.891 3.54601C16.7951 3.35785 16.6422 3.20487 16.454 3.10899C16.2401 3 15.9601 3 15.4 3H8.6C8.03995 3 7.75992 3 7.54601 3.10899C7.35785 3.20487 7.20487 3.35785 7.10899 3.54601C7 3.75992 7 4.03995 7 4.6V5.4V7M17 7H7M8.6 21H15.4C15.9601 21 16.2401 21 16.454 20.891C16.6422 20.7951 16.7951 20.6422 16.891 20.454C17 20.2401 17 19.9601 17 19.4V16.6C17 16.0399 17 15.7599 16.891 15.546C16.7951 15.3578 16.6422 15.2049 16.454 15.109C16.2401 15 15.9601 15 15.4 15H8.6C8.03995 15 7.75992 15 7.54601 15.109C7.35785 15.2049 7.20487 15.3578 7.10899 15.546C7 15.7599 7 16.0399 7 16.6V19.4C7 19.9601 7 20.2401 7.10899 20.454C7.20487 20.6422 7.35785 20.7951 7.54601 20.891C7.75992 21 8.03995 21 8.6 21Z"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    </symbol>
 </head>
 
 <div>
@@ -64,7 +40,7 @@
                         @foreach (Floor floor in floors)
                         {
                             <button class="floor-button @(floor.Id == floors.First().Id ? "active" : "")"
-                                    data-tab="floor @floor.Id">
+                            data-tab="floor @floor.Id">
                                 @floor.Name
                             </button>
                         }
@@ -75,14 +51,14 @@
             @foreach (Floor floor in floors)
             {
                 <div class="tab-content @(floor.Id == floors.First().Id ? "active" : "") task-tab-content"
-                     id="tab-floor @floor.Id">
+                id="tab-floor @floor.Id">
                     <div class="tab-map-content">
                         <div class="map">
                             <div class="content">
                                 @foreach (SubLocation location in locations.Where(l => l.Floor.Id == floor.Id))
                                 {
                                     <div class="location"
-                                         style="width: @(location.Width)px;
+                                    style="width: @(location.Width)px;
                                         height: @(location.Height)px;
                                         top: @(location.PositionY)px;
                                         left: @(location.PositionX)px;">
@@ -91,11 +67,72 @@
                                         </div>
                                     </div>
                                 }
+                                @foreach(EquipmentItem item in items.Where(i => i.SubLocation.Floor.Id == floor.Id))
+                                {
+                                    <div style="z-index:2; position: absolute; left: @(item.PositionX)px; top: @(item.PositionY)px;">
+                                        <div class="item-container @(item.Status.Equals("Работает") ? "worked" : "danger")">
+                                            <div class="item @(item.Status == "Работает" ? "worked" : "danger")">
+                                                <svg class="w-6 h-6 text-red-500 icon-svg">
+                                                    @if (item.Category.Name.Equals("Компьютер") || item.Name.Equals("Монитор"))
+                                                    {
+                                                        <use href="#icon-computer" />
+                                                    }
+                                                    else if (item.Category.Name.Equals("Принтер"))
+                                                    {
+                                                        <use href="#icon-printer" />
+                                                    }
+                                                    else if (item.Category.Name.Equals("Сервер"))
+                                                    {
+                                                        <use href="#icon-server" />
+                                                    }
+                                                    else if (item.Category.Name.Equals("Сетевое оборудование"))
+                                                    {
+                                                        <use href="#icon-internet-settings" />
+                                                    }
+                                                </svg>
+                                            </div>
+                                        </div>
+                                   </div>
+                                }
                             </div>
                         </div>
+
                     </div>
                 </div>
             }
+            <div class="legend-footer">
+                @foreach (Category category in categories)
+                {
+                    <div style="display: flex; align-items: center; gap: .5rem;">
+                        <div class="icon-container-wrapper">
+                            <div class="icon-container">
+                                <svg class="w-6 h-6 text-red-500 icon-svg">
+                                        @if (category.Name.Equals("Компьютер") || category.Name.Equals("Монитор"))
+                                        {
+                                            <use href="#icon-computer" />
+                                        }
+                                        else if (category.Name.Equals("Принтер"))
+                                        {
+                                            <use href="#icon-printer" />
+                                        }
+                                        else if (category.Name.Equals("Сервер"))
+                                        {
+                                            <use href="#icon-server" />
+                                        }
+                                        else if (category.Name.Equals("Сетевое оборудование"))
+                                        {
+
+                                            <use href="#icon-internet-settings" />
+                                        }
+                                </svg>
+                            </div>
+                        </div>
+                        <span>@category.Name</span>
+                    </div>
+                }
+                
+                
+            </div>
         </div>
 
         @section Scripts {

@@ -19,13 +19,13 @@ namespace ErmakovAppDiplom.Controllers
 
         public IActionResult Index()
         {
-            var equipmentItems = _repository.GetAll();
+            List<EquipmentItem> equipmentItems = _repository.GetAll();
             return View(equipmentItems);
         }
 
         public IActionResult Details(int id)
         {
-            var equipmentItem = _repository.GetById(id);
+            EquipmentItem equipmentItem = _repository.GetById(id);
             if (equipmentItem == null)
             {
                 return NotFound();

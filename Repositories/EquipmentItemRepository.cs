@@ -31,11 +31,19 @@ namespace ErmakovAppDiplom.Repositories
 
         public List<EquipmentItem> GetAll()
         {
+            //return _context.EquipmentItems
+            //    .Include(x => x.User)
+            //    .Include(x => x.Category)
+            //    .Include(x => x.SubLocation)
+            //        .ThenInclude(y => y.Location)
+            //    .ToList();
+
+
             return _context.EquipmentItems
-                .Include(x => x.User)
-                .Include(x => x.Category)
-                .Include(x => x.SubLocation)
-                    .ThenInclude(y => y.Location)
+                        .Include(x => x.User)
+                    .Include(x => x.Category)
+                    .Include(x => x.SubLocation)
+                        .ThenInclude(y => y.Location)
                 .ToList();
         }
 

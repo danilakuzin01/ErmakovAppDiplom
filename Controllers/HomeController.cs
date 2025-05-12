@@ -10,17 +10,17 @@ namespace ErmakovAppDiplom.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly UserManager<User> _userManager;
+        private readonly IAdvertisementRepository _advertisementRepository;
         private readonly IUserRepository _userRepository;
         private readonly ITaskRepository _taskRepository;
-        public HomeController(ILogger<HomeController> logger, UserManager<User> userManager, 
-            IUserRepository userRepository, ITaskRepository taskRepository)
+        public HomeController(UserManager<User> userManager, IUserRepository userRepository, 
+            ITaskRepository taskRepository, IAdvertisementRepository advertisementRepository)
         {
-            _logger = logger;
             _userManager = userManager;
             _userRepository = userRepository;
             _taskRepository = taskRepository;
+            _advertisementRepository = advertisementRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -30,6 +30,9 @@ namespace ErmakovAppDiplom.Controllers
 
             ViewBag.UsersCount = _userRepository.GetAll().Count;
             ViewBag.AdminsCount = _userManager.GetUsersInRoleAsync("Admin").Result.Count;
+            ViewBag.Advertisements = _advertisementRepository.GetAll();
+            ViewBag.InWorkTasks = _taskRepository.GetInProgress();
+            ViewBag.CompletedTasks = _taskRepository.GetCompleted();
 
             ViewBag.Tasks = _taskRepository.GetLastFive();
 

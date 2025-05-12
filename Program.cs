@@ -29,6 +29,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
+builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IAttributeRepository, AttributeRepository>();
@@ -36,6 +37,7 @@ builder.Services.AddScoped<IEquipmentItemRepository, EquipmentItemRepository>();
 builder.Services.AddScoped<IToDoListRepository, ToDoListRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IFloorRepository, FloorRepository>();
+builder.Services.AddScoped<ISubLocationRepository, SubLocationRepository>();
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();

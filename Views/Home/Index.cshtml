@@ -1,7 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
     var username = ViewData["Username"] as string;
-    List<TaskModel> tasks = ViewBag.Tasks;
+    List<TaskModel> allTasks = ViewBag.Tasks;
+    List<TaskModel> inWorkTasks = ViewBag.InWorkTasks;
+    List<TaskModel> completedTasks = ViewBag.CompletedTasks;
 }
 
 <link href="~/css/index.css" rel="stylesheet" />
@@ -67,7 +69,9 @@
                         <p style="margin: 0">Админы</p>
                     </div>
                 </div>
-                <button class="card-button">Управление</button>
+                <form asp-action="Index" asp-controller="User">
+                    <button class="card-button">Управление</button>
+                </form>
             </div>
 
         </div>
@@ -91,37 +95,25 @@
             <div class="dashboard-card-body">
 
                 <!-- Обернуть в цикл -->
-                <div class="dashboard-card-advertisement">
-                    <div class="dashboard-card-advertisement-container">
-                        <div class="advertisement-head">
-                            <h3 class="advertisement-title">Плановые работы на сервере</h3>
-                            <span class="advertisement-date">2025-04-25</span>
-                        </div>
-                        <p class="advertisement-text">
-                            Уважаемые коллеги! 28 апреля с 22:00 до 23:00 будут проводиться плановые технические работы на сервере. Возможны кратковременные перебои в работе корпоративных приложений.
-                        </p>
-                        <div class="advertisement-author">
-                            Автор: Системный администратор
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dashboard-card-advertisement">
-                    <div class="dashboard-card-advertisement-container">
-                        <div class="advertisement-head">
-                            <h3 class="advertisement-title">Плановые работы на сервере</h3>
-                            <span class="advertisement-date">2025-04-25</span>
-                        </div>
-                        <p class="advertisement-text">
-                            Уважаемые коллеги! 28 апреля с 22:00 до 23:00 будут проводиться плановые технические работы на сервере. Возможны кратковременные перебои в работе корпоративных приложений.
-                        </p>
-                        <div class="advertisement-author">
-                            Автор: Системный администратор
+                @foreach(Advertisement advertisement in ViewBag.Advertisements)
+                {
+                    <div class="dashboard-card-advertisement">
+                        <div class="dashboard-card-advertisement-container">
+                            <div class="advertisement-head">
+                                <h3 class="advertisement-title">@advertisement.Title</h3>
+                                <span class="advertisement-date">@advertisement.PublishDate.ToString("yyyy-MM-dd")</span>
+                            </div>
+                            <p class="advertisement-text">
+                                @advertisement.Description
+                            </p>
+                            <div class="advertisement-author">
+                                Автор: @advertisement.User.LastName @advertisement.User.FirstName
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
             </div>
-        </div>
+        </div> 
 
 
 
@@ -149,7 +141,7 @@
 
                 <div id="tabContents">
                     <div class="task-tab-content active" id="tab-all">
-                        @foreach(TaskModel task in tasks)
+                        @foreach (TaskModel task in allTasks)
                         {
                             <div class=task-record>
                                 <div class="task-record-container">
@@ -158,7 +150,38 @@
                                             <h4>@task.Title</h4>
                                             <p>@task.Description</p>
                                         </div>
-                                        <div class="task-record-difficult @(task.Difficult == "Средний" ? "medium" : task.Difficult == "Срочно" ? "hard" : "low")">
+                                        <div class="task-record-difficult @(task.Difficult.Equals("Средний") ? "medium" : task.Difficult.Equals("Срочно") ? "hard" : "low")">
+                                            @task.Difficult
+                                        </div>
+                                    </div>
+                                    <div class="task-record-date-status">
+                                        <span class="task-record-date">Срок: @task.DeadLine.ToString("MM/dd/yyyy")</span>
+                                        <div class="task-record-status @(task.Status.Equals("Выполнено") ? "done" : task.Status.Equals("В процессе") ? "inprogress" : "waiting")">@task.Status</div>
+                                    </div>
+                                    @if(task.Status != "Выполнено")
+                                    {
+                                        <form asp-action="SetCompleted" asp-controller="Task" asp-route-id="@task.Id" method="post">
+                                            <button class="task-record-button" type="submit">
+                                                <svg style="color: black" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check h-4 w-4 mr-1" data-lov-id="src/pages/Dashboard.tsx:275:26" data-lov-name="Check" data-component-path="src/pages/Dashboard.tsx" data-component-line="275" data-component-file="Dashboard.tsx" data-component-name="Check" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20mr-1%22%7D"><path d="M20 6 9 17l-5-5"></path></svg>
+                                                Отметить как выполненное
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="task-tab-content" id="tab-inprogress">
+                        @foreach (TaskModel task in inWorkTasks)
+                        {
+                            <div class=task-record>
+                                <div class="task-record-container">
+                                    <div class="task-record-head">
+                                        <div>
+                                            <h4>@task.Title</h4>
+                                            <p>@task.Description</p>
+                                        </div>
+                                        <div class="task-record-difficult @(task.Difficult.Equals("Средний") ? "medium" : task.Difficult.Equals("Срочно") ? "hard" : "low")">
                                             @task.Difficult
                                         </div>
                                     </div>
@@ -166,20 +189,37 @@
                                         <span class="task-record-date">Срок: @task.DeadLine.ToString("MM/dd/yyyy")</span>
                                         <div class="task-record-status inprogress">@task.Status</div>
                                     </div>
-                                    <button class="task-record-button">
-                                        <svg style="color: black" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check h-4 w-4 mr-1" data-lov-id="src/pages/Dashboard.tsx:275:26" data-lov-name="Check" data-component-path="src/pages/Dashboard.tsx" data-component-line="275" data-component-file="Dashboard.tsx" data-component-name="Check" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20mr-1%22%7D"><path d="M20 6 9 17l-5-5"></path></svg>
-                                        Отметить как выполненное
-                                    </button>
+                                    <form asp-action="SetCompleted" asp-controller="Task" asp-route-id="@task.Id" method="post">
+                                        <button class="task-record-button" type="submit">
+                                            <svg style="color: black" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check h-4 w-4 mr-1" data-lov-id="src/pages/Dashboard.tsx:275:26" data-lov-name="Check" data-component-path="src/pages/Dashboard.tsx" data-component-line="275" data-component-file="Dashboard.tsx" data-component-name="Check" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20mr-1%22%7D"><path d="M20 6 9 17l-5-5"></path></svg>
+                                            Отметить как выполненное
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         }
-                        
-                    </div>
-                    <div class="task-tab-content" id="tab-inprogress">
-                        <p>Задачи в работе.</p>
                     </div>
                     <div class="task-tab-content" id="tab-completed">
-                        <p>Выполненные задачи.</p>
+                        @foreach (TaskModel task in completedTasks)
+                        {
+                            <div class=task-record>
+                                <div class="task-record-container">
+                                    <div class="task-record-head">
+                                        <div>
+                                            <h4>@task.Title</h4>
+                                            <p>@task.Description</p>
+                                        </div>
+                                        <div class="task-record-difficult @(task.Difficult.Equals("Средний") ? "medium" : task.Difficult.Equals("Срочно") ? "hard" : "low")">
+                                            @task.Difficult
+                                        </div>
+                                    </div>
+                                    <div class="task-record-date-status">
+                                        <span class="task-record-date">Срок: @task.DeadLine.ToString("MM/dd/yyyy")</span>
+                                        <div class="task-record-status done">@task.Status</div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
 

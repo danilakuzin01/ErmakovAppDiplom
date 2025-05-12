@@ -17,7 +17,7 @@ namespace ErmakovAppDiplom.Repositories
            return _context.Tasks.ToList();
         }
 
-        public List<TaskModel> GetCompleated()
+        public List<TaskModel> GetCompleted()
         {
             return _context.Tasks.Where(t => t.Status.Equals("Выполнено")).ToList();
         }
@@ -30,6 +30,14 @@ namespace ErmakovAppDiplom.Repositories
         public List<TaskModel> GetLastFive()
         {
             return _context.Tasks.ToList();
+        }
+
+        public void SetCompleated(long id)
+        {
+            TaskModel task = _context.Tasks.FirstOrDefault(t => t.Id == id);
+            task.Status = "Выполнено";
+            _context.Tasks.Update(task);
+            _context.SaveChanges();
         }
     }
 }

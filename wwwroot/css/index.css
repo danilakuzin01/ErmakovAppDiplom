@@ -315,12 +315,16 @@
 }
 
     .task-record-difficult.low {
+        color: #1e40af;
+        background-color: #dbeafe;
     }
     .task-record-difficult.medium {
         color: #854d0e;
         background-color: #fef9c3;
     }
     .task-record-difficult.hard {
+        color: #991b1b;
+        background-color: #fee2e2;
     }
 
 .task-record-date-status {
@@ -347,12 +351,18 @@
     align-items: center;
     display: inline-flex;
 }
-    .task-record-status.waiting{}
+    .task-record-status.waiting {
+        color: #374151;
+        border-color: #6b7280;
+    }
     .task-record-status.inprogress {
         border-color: #eab308;
         color: #a16207;
     }
-    .task-record-status.complete{}
+    .task-record-status.done {
+        color: #15803d;
+        border-color: #22c55e;
+    }
 
     .task-record-button {
         font-weight: 600;

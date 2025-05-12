@@ -8,6 +8,7 @@ namespace ErmakovAppDiplom
     public class AppDbContext : IdentityDbContext<User>
     {
         public DbSet<Models.Attribute> Attributes { get; set; }
+        public DbSet<Advertisement> Advertisements { get; set; }
         public DbSet<BoardNote> BoardNotes { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Office> Offices { get; set; }

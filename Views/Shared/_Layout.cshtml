@@ -103,7 +103,7 @@
                     <a asp-action="Index" asp-controller="EquipmentItem" class="nav-link  @(ViewContext.RouteData.Values["controller"]?.ToString()=="EquipmentItem"?"active":"")">Оборудование</a>
                     <a asp-action="Index" asp-controller="OfficeMap" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString()=="OfficeMap"?"active":"")">Карта офиса</a>
                     <a asp-action="Index" asp-controller="User" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString()=="User"?"active":"")">Пользователи</a>
-                    <a class="nav-link">Настройки</a>
+                    @* <a class="nav-link">Настройки</a> *@
                 </nav>
             </div>
             <div style="align-items: center; display: flex">

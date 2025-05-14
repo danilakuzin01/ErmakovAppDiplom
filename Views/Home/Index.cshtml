@@ -2,6 +2,7 @@
     ViewData["Title"] = "Home Page";
     var username = ViewData["Username"] as string;
     List<TaskModel> allTasks = ViewBag.Tasks;
+    List<TaskModel> waitingTasks = ViewBag.WaitingTasks;
     List<TaskModel> inWorkTasks = ViewBag.InWorkTasks;
     List<TaskModel> completedTasks = ViewBag.CompletedTasks;
 }
@@ -34,7 +35,7 @@
             <div class="card-content">
                 <div style="justify-content: space-between; align-items: center; display: flex;">
                     <div>
-                        <p class="issue-count">0</p>
+                        <p class="issue-count"> @(waitingTasks.Count + inWorkTasks.Count)</p>
                         <p class="issue-content-text">Требуют внимания</p>
                     </div>
                     <div>
@@ -84,18 +85,44 @@
                     <h3>Объявления</h3>
                     <p>Важная информация для сотрудников</p>
                 </div>
-                <button class="dashboard-card-button">
+                <button class="dashboard-card-button" onclick="openModalAdvertisement()">
                     <svg width="1rem" height="1rem" class="w-6 h-6 text-red-500">
                         <use href="#icon-plus"></use>
-                    </svg>                    
+                    </svg>
                     Добавить
                 </button>
             </div>
 
+            <div class="modal" id="addAnnouncementModal">
+                <div class="modal-content">
+                    <div>
+                        <h2>Новое объявление</h2>
+                        <p>Создайте новое объявление для сотрудников</p>
+                    </div>
+                    <form>
+                        <div class="class=" modal-advertisement-form"">
+                            <div>
+                                <label for="title">Заголовок</label>
+                                <input type="text" id="title" name="title" required>
+                            </div>
+                            <div>
+                                <label for="content">Содержание</label>
+                                <textarea id="content" name="content" required></textarea>
+                            </div>
+                        </div>
+                        <div style="justify-content: flex-end; flex-direction: row; display: flex;">
+                            <button class="button cancel-modal">Отменить</button>
+                            <button type="submit" class="button submit-advertisement">Сохранить</button>
+                        </div>
+                    </form>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+            </div>
+
+
             <div class="dashboard-card-body">
 
-                <!-- Обернуть в цикл -->
-                @foreach(Advertisement advertisement in ViewBag.Advertisements)
+                @foreach (Advertisement advertisement in ViewBag.Advertisements)
                 {
                     <div class="dashboard-card-advertisement">
                         <div class="dashboard-card-advertisement-container">
@@ -112,8 +139,9 @@
                         </div>
                     </div>
                 }
+
             </div>
-        </div> 
+        </div>
 
 
 
@@ -126,7 +154,7 @@
                 <button class="dashboard-card-button">
                     <svg width="1rem" height="1rem" class="w-6 h-6 text-red-500">
                         <use href="#icon-plus"></use>
-                    </svg>                    
+                    </svg>
                     Добавить
                 </button>
             </div>
@@ -158,7 +186,7 @@
                                         <span class="task-record-date">Срок: @task.DeadLine.ToString("MM/dd/yyyy")</span>
                                         <div class="task-record-status @(task.Status.Equals("Выполнено") ? "done" : task.Status.Equals("В процессе") ? "inprogress" : "waiting")">@task.Status</div>
                                     </div>
-                                    @if(task.Status != "Выполнено")
+                                    @if (task.Status != "Выполнено")
                                     {
                                         <form asp-action="SetCompleted" asp-controller="Task" asp-route-id="@task.Id" method="post">
                                             <button class="task-record-button" type="submit">
@@ -239,7 +267,7 @@
 
 </div>
 
-@section Scripts{
+@section Scripts {
     <script>
         document.querySelectorAll('.task-tab-button').forEach(button => {
             button.addEventListener('click', () => {
@@ -256,6 +284,23 @@
 
                 document.getElementById('tab-' + tab).classList.add('active');
             });
+        });
+    </script>
+
+    <script>
+        function openModalAdvertisement() {
+            document.getElementById('addAnnouncementModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('addAnnouncementModal').classList.remove('active');
+        }
+
+        // Закрытие модального окна при клике вне контента
+        document.getElementById('addAnnouncementModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
         });
     </script>
 }

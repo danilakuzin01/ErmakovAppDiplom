@@ -32,6 +32,7 @@ namespace ErmakovAppDiplom.Controllers
             ViewBag.AdminsCount = _userManager.GetUsersInRoleAsync("Admin").Result.Count;
             ViewBag.Advertisements = _advertisementRepository.GetAll();
             ViewBag.InWorkTasks = _taskRepository.GetInProgress();
+            ViewBag.WaitingTasks = _taskRepository.GetWaiting();
             ViewBag.CompletedTasks = _taskRepository.GetCompleted();
 
             ViewBag.Tasks = _taskRepository.GetLastFive();

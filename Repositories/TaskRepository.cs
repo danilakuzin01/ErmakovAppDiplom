@@ -22,6 +22,10 @@ namespace ErmakovAppDiplom.Repositories
             return _context.Tasks.Where(t => t.Status.Equals("Выполнено")).ToList();
         }
 
+        public List<TaskModel> GetWaiting()
+        {
+            return _context.Tasks.Where(t => t.Status.Equals("Ожидает")).ToList();
+        }
         public List<TaskModel> GetInProgress()
         {
             return _context.Tasks.Where(t => t.Status.Equals("В процессе")).ToList();

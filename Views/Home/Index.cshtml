@@ -74,7 +74,6 @@
                     <button class="card-button">Управление</button>
                 </form>
             </div>
-
         </div>
     </div>
 
@@ -119,6 +118,8 @@
                 </div>
             </div>
 
+            
+
 
             <div class="dashboard-card-body">
 
@@ -151,7 +152,7 @@
                     <h3>Задачи</h3>
                     <p>Текущие задания для IT-отдела</p>
                 </div>
-                <button class="dashboard-card-button">
+                <button class="dashboard-card-button" onclick="openTaskModal()">
                     <svg width="1rem" height="1rem" class="w-6 h-6 text-red-500">
                         <use href="#icon-plus"></use>
                     </svg>
@@ -250,7 +251,47 @@
                         }
                     </div>
                 </div>
-
+                <div class="modal" id="addTaskModal">
+                    <div class="modal-content">
+                        <div>
+                            <h2>Новая задача</h2>
+                            <p>Создайте новую задачу для IT-отдела</p>
+                        </div>
+                        <form>
+                            <div class="class=" modal-advertisement-form"">
+                                <div>
+                                    <label for="name">Название</label>
+                                    <input type="text" id="name" name="name" required>
+                                </div>
+                                <div>
+                                    <label for="content">Описание</label>
+                                    <textarea id="content" name="content" required></textarea>
+                                </div>
+                                <div>
+                                    <label for="content">Описание</label>
+                                    <textarea id="content" name="content" required></textarea>
+                                </div>
+                                <div>
+                                    <label>Приоритет</label>
+                                    <select id="priority" name="proirity">
+                                        <option value="Низкий">Низкий</option>
+                                        <option value="Средний">Средний</option>
+                                        <option value="Высокий">Высокий</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="deadline">Срок выполнения</label>
+                                    <input type="date"/>
+                                </div>
+                            </div>
+                            <div style="justify-content: flex-end; flex-direction: row; display: flex;">
+                                <button class="button cancel-modal">Отменить</button>
+                                <button type="submit" class="button submit-advertisement">Сохранить</button>
+                            </div>
+                        </form>
+                        <button class="modal-close" onclick="closeTaskModal()">&times;</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -300,6 +341,21 @@
         document.getElementById('addAnnouncementModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeModal();
+            }
+        });
+
+        function openTaskModal() {
+            document.getElementById('addTaskModal').classList.add('active');
+        }
+
+        function closeTaskModal() {
+            document.getElementById('addTaskModal').classList.remove('active');
+        }
+
+        // Закрытие модального окна при клике вне контента
+        document.getElementById('addTaskModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTaskModal();
             }
         });
     </script>

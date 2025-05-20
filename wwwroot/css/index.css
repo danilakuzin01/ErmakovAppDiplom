@@ -452,6 +452,7 @@
     color: black;
 }
 
+.modal select,
 .modal input,
 .modal textarea {
     margin-top: .5rem;
@@ -470,6 +471,7 @@
     display: flex;
     box-sizing: border-box;
     border-style: solid;
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
 }
 
 .modal textarea {

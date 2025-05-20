@@ -1,10 +1,11 @@
 ﻿@model List<EquipmentItem>
 @using ErmakovAppDiplom.Repositories.IRepositories;
-@inject ICategoryRepository categoryRepository
 
 @{
     ViewData["Title"] = "Инвентарь";
-    var categories = categoryRepository.GetAll();
+    var categories = ViewBag.Categories;
+    var users = ViewBag.Employees;
+
 }
 <head>
     <link href="~/css/equipment.css" rel="stylesheet" />
@@ -16,7 +17,7 @@
                 <h3>Оборудование</h3>
                 <p>Управление всем оборудованием компании</p>
             </div>
-            <button>
+            <button onclick="openItemModal()">
                 <svg width="1rem" height="1rem" class="w-6 h-6 text-red-500">
                     <use href="#icon-plus"></use>
                 </svg>
@@ -40,12 +41,11 @@
                         </select>
                     </div>
                     <select class="types-select">
-                        <option value="all">Все типы</option>
-                        <option value="type1">Компьютер</option>
-                        <option value="type2">Монитор</option>
-                        <option value="type3">Принтер</option>
-                        <option value="type4">Сервер</option>
-                        <option value="type5">Сетевое оборудование</option>
+                        <option value="all">Все категории</option>
+                        @foreach(Category category in categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
                     </select>
                 </div>
             </div>
@@ -160,9 +160,73 @@
     </div>
 </div>
 
+<div class="modal" id="addItemModal">
+    <div class="modal-content">
+        <div>
+            <h2>
+                Добавить новое оборудование
+            </h2>
+        </div>
+        <form>
+            <div class="class=" modal-advertisement-form"">
+                <div>
+                    <label>Тип оборудования</label>
+                    <select>
+                        @foreach(Category category in categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label for="name">Название</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div>
+                    <label for="content">Модель</label>
+                    <input type="text" id="content" name="content" required></input>
+                </div>
+
+                <div>
+                    <label for="InventoryNumber">Инвентарный номер</label>
+                    <input type="text" id="InventoryNumber" name="InventoryNumber" />
+                </div>
+                <div>
+                    <label>Статус</label>
+                    <select>
+                        <option>Рабочее</option>
+                        <option>На обслуживании</option>
+                        <option>Неисправно</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Номер кабинета</label>
+                    <select>
+                        <option>300</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Ответсвенный сотрудник</label>
+                    <select>
+                        @foreach(User user in users)
+                        {
+                            <option>@user.LastName @user.FirstName @user.SecondName</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div style="justify-content: flex-end; flex-direction: row; display: flex;">
+                <button class="button cancel-modal">Отменить</button>
+                <button type="submit" class="button submit-advertisement">Сохранить</button>
+            </div>
+        </form>
+        <button class="modal-close" onclick="closeItemModal()">&times;</button>
+    </div>
+</div>
+
 @section Scripts {
     <script>
-                document.querySelectorAll('.task-tab-button').forEach(button => {
+            document.querySelectorAll('.task-tab-button').forEach(button => {
             button.addEventListener('click', () => {
                 // Снимаем активность со всех кнопок
                 document.querySelectorAll('.task-tab-button').forEach(btn => btn.classList.remove('active'));
@@ -181,6 +245,19 @@
                 }
             });
         });
+        function openItemModal() {
+            document.getElementById('addItemModal').classList.add('active');
+        }
 
+        function closeItemModal() {
+            document.getElementById('addItemModal').classList.remove('active');
+        }
+
+        // Закрытие модального окна при клике вне контента
+        document.getElementById('addItemModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeItemModal();
+            }
+        });
     </script>
 }

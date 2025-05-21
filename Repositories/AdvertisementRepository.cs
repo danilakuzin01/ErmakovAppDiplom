@@ -15,12 +15,15 @@ namespace ErmakovAppDiplom.Repositories
 
         public void Create(Advertisement advertisement)
         {
-            throw new NotImplementedException();
+            _context.Advertisements.Add(advertisement);
+            _context.SaveChanges();
         }
 
         public void Delete(long id)
         {
-            throw new NotImplementedException();
+            Advertisement advertisement = _context.Advertisements.FirstOrDefault(a => a.Id == id);
+            _context.Advertisements.Remove(advertisement);
+            _context.SaveChanges();
         }
 
         public List<Advertisement> GetAll()

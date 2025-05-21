@@ -10,5 +10,8 @@ namespace ErmakovAppDiplom.Repositories.IRepositories
         List<TaskModel> GetInProgress();
         List<TaskModel> GetCompleted();
         void SetCompleated(long id);
+        void Create(TaskModel task);
+        void Update(TaskModel task);
+        void Delete(long id);
     }
 }

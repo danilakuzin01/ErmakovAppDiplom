@@ -43,5 +43,21 @@ namespace ErmakovAppDiplom.Repositories
             _context.Tasks.Update(task);
             _context.SaveChanges();
         }
+
+        public void Create(TaskModel task)
+        {
+            _context.Tasks.Add(task);
+            _context.SaveChanges();
+        }
+
+        public void Update(TaskModel task)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(long id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

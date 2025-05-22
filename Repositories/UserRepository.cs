@@ -1,4 +1,5 @@
 ﻿using ErmakovAppDiplom.Models;
+using ErmakovAppDiplom.Models.ViewModel;
 using ErmakovAppDiplom.Repositories.IRepositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +50,24 @@ namespace ErmakovAppDiplom.Repositories
         public void Update(User user)
         {
             throw new NotImplementedException();
+        }
+
+        public List<User> GetAllByFilter(UserFilterViewModel userFilter)
+        {
+            IQueryable<User> users = _context.Users
+                .Include(u => u.Post);
+
+            if (!string.IsNullOrEmpty(userFilter.Search))
+            {
+                users = users
+                    .Where(u => u.FirstName.ToLower().Contains(userFilter.Search.ToLower())
+                || u.LastName.ToLower().Contains(userFilter.Search.ToLower())
+                || u.Email.ToLower().Contains(userFilter.Search.ToLower())
+                || u.Post.Name.ToLower().Contains(userFilter.Search.ToLower())
+                );
+            }
+                
+            return users.ToList();
         }
     }
 }

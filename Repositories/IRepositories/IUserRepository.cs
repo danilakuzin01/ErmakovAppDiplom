@@ -1,4 +1,5 @@
 ﻿using ErmakovAppDiplom.Models;
+using ErmakovAppDiplom.Models.ViewModel;
 
 namespace ErmakovAppDiplom.Repositories.IRepositories
 {
@@ -9,5 +10,7 @@ namespace ErmakovAppDiplom.Repositories.IRepositories
         void Create(User user);
         void Update(User user);
         void Delete(int id);
+
+        List<User> GetAllByFilter(UserFilterViewModel userFilter);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ErmakovAppDiplom.Models;
+using ErmakovAppDiplom.Models.ViewModel;
 using ErmakovAppDiplom.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,6 +46,23 @@ namespace ErmakovAppDiplom.Repositories
                     .Include(x => x.SubLocation)
                         .ThenInclude(y => y.Location)
                 .ToList();
+        }
+
+        public List<EquipmentItem> GetAllByFilter(EquipmentFilterViewModel equipmentFilter)
+        {
+            IQueryable<EquipmentItem> equipments = _context.EquipmentItems
+                .Include(e => e.Category)
+                .Include(e => e.SubLocation)
+                    .ThenInclude(y => y.Location);
+            if (!string.IsNullOrEmpty(equipmentFilter.Search))
+            {
+                equipments = equipments.Where(e => e.Name.ToLower().Contains(equipmentFilter.Search.ToLower())
+                    || e.Model.ToLower().Contains(equipmentFilter.Search.ToLower())
+                    || e.InventoryNumber.ToLower().Contains(equipmentFilter.Search.ToLower())
+                    );
+            }
+
+            return equipments.ToList();
         }
 
         public EquipmentItem GetById(int id)

@@ -110,7 +110,7 @@
                             </div>
                         </div>
                         <div style="justify-content: flex-end; flex-direction: row; display: flex;">
-                            <button class="button cancel-modal">Отменить</button>
+                            <button class="button cancel-modal" onclick="closeModal()">Отменить</button>
                             <button type="submit" class="button submit-advertisement">Сохранить</button>
                         </div>
                     </form>
@@ -125,13 +125,12 @@
                     <div class="dashboard-card-advertisement">
                         <div class="dashboard-card-advertisement-container">
                             <form asp-action="Delete" asp-controller="Advertisement" asp-route-id="@advertisement.Id" method="post">
-                                <button type="submit" style="background-color: white; width: 1rem; height: 1rem; position: relative; float: right; margin-top: -20px; margin-right: -15px">
-                                    <svg width="1rem" height="1rem" viewBox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-                                        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-                                            <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-469.000000, -1041.000000)" fill="#000000">
-                                                <path d="M487.148,1053.48 L492.813,1047.82 C494.376,1046.26 494.376,1043.72 492.813,1042.16 C491.248,1040.59 488.712,1040.59 487.148,1042.16 L481.484,1047.82 L475.82,1042.16 C474.257,1040.59 471.721,1040.59 470.156,1042.16 C468.593,1043.72 468.593,1046.26 470.156,1047.82 L475.82,1053.48 L470.156,1059.15 C468.593,1060.71 468.593,1063.25 470.156,1064.81 C471.721,1066.38 474.257,1066.38 475.82,1064.81 L481.484,1059.15 L487.148,1064.81 C488.712,1066.38 491.248,1066.38 492.813,1064.81 C494.376,1063.25 494.376,1060.71 492.813,1059.15 L487.148,1053.48" id="cross" sketch:type="MSShapeGroup">
-                                                </path>
-                                            </g>
+                                <button type="submit" style="background-color: white; width: 1rem; height: 1rem; position: relative; float: right; margin-top: -25px; margin-right: -5px">
+                                    <svg width="1.5rem" height="1.5rem" viewBox="-3.2 -3.2 38.40 38.40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+                                        <g stroke-width="0"></g>
+                                        <g stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" stroke-width="1"></g>
+                                        <g stroke="currentColor" color="black">
+                                            <path d="M10.771 8.518c-1.144 0.215-2.83 2.171-2.086 2.915l4.573 4.571-4.573 4.571c-0.915 0.915 1.829 3.656 2.744 2.742l4.573-4.571 4.573 4.571c0.915 0.915 3.658-1.829 2.744-2.742l-4.573-4.571 4.573-4.571c0.915-0.915-1.829-3.656-2.744-2.742l-4.573 4.571-4.573-4.571c-0.173-0.171-0.394-0.223-0.657-0.173v0zM16 1c-8.285 0-15 6.716-15 15s6.715 15 15 15 15-6.716 15-15-6.715-15-15-15zM16 4.75c6.213 0 11.25 5.037 11.25 11.25s-5.037 11.25-11.25 11.25-11.25-5.037-11.25-11.25c0.001-6.213 5.037-11.25 11.25-11.25z"></path> 
                                         </g>
                                     </svg>
                                 </button>
@@ -288,7 +287,7 @@
                                 </div>
                             </div>
                             <div style="justify-content: flex-end; flex-direction: row; display: flex;">
-                                <button type="button" class="button cancel-modal">Отменить</button>
+                                <button type="button" class="button cancel-modal" onclick="closeTaskModal()">Отменить</button>
                                 <button type="submit" class="button submit-advertisement">Сохранить</button>
                             </div>
                         </form>

@@ -20,8 +20,7 @@
                     Управление сотрудниками и их доступами
                 </p>
             </div>
-            <button class="add-user-button">
-
+            <button class="add-user-button" onclick="openEmployeeModal()">
                 <svg width="1rem" height="1rem" class="w-6 h-6 text-red-500">
                     <use href="#icon-plus"></use>
                 </svg>
@@ -29,29 +28,30 @@
             </button>
         </div>
         <div class="user-container-body">
-            <div class="user-body-search-filter">
+            <form asp-action="Index" method="post" class="user-body-search-filter">
                 <div class="search-container">
                     <svg width="1rem" height="1rem" class="w-6 h-6 text-red-500">
                         <use href="#icon-search"></use>
                     </svg>
-                    <input />
+                    <input name="Search" placeholder="Имя, фамилия, email, должность..." value="ViewBag.Search" />
                 </div>
                 <div style="display: flex; gap: .5rem;">
                     <div class="filter-status-button-container">
                         <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter h-4 w-4 text-gray-400" data-lov-id="src/pages/Equipment.tsx:419:16" data-lov-name="Filter" data-component-path="src/pages/Equipment.tsx" data-component-line="419" data-component-file="Equipment.tsx" data-component-name="Filter" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20text-gray-400%22%7D"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                        <select class="types-select">
+                        <select class="types-select" name="Role">
                             <option value="all">Все роли</option>
-                            <option value="status1">Администраторы</option>
-                            <option value="status2">Пользователи</option>
+                            <option value="Администратор">Администраторы</option>
+                            <option value="Пользователи">Пользователи</option>
                         </select>
                     </div>
-                    <select class="types-select">
+                    <select class="types-select" name="PostId">
                         <option value="all">Все отделы</option>
                         <option value="type1">Руководство</option>
                         <option value="type2">Бухгалтерия</option>
                     </select>
+                    <button type="submit" class="filter-button">Фильтр</button>
                 </div>
-            </div>
+            </form>
             <div style="width:100%">
 
                 <div class="content">
@@ -59,11 +59,11 @@
                         <button class="task-tab-button active" data-tab="spisok" role="tab" aria-selected="true">Список</button>
                         <button class="task-tab-button" role="tab" data-tab="plitka">Плитка</button>
                     </div>
-                    <div id="tabContents">
+                    <div id="tabContents" class="tabContent">
                         <div class="task-tab-content active" id="tab-spisok">
                             <table class="table-spisok">
                                 <thead>
-                                    <tr>
+                                    <tr style="background-color: #f9fafb;">
                                         <th>Сотрудник</th>
                                         <th>Должность</th>
                                         <th>Отдел</th>
@@ -73,7 +73,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach(UserTableViewModel user in Model)
+                                    @foreach (UserTableViewModel user in Model)
                                     {
                                         <tr>
                                             <td>
@@ -144,6 +144,76 @@
     </div>
 </div>
 
+<div class="modal" id="addEmployeeModal">
+    <div class="modal-content">
+        <div>
+            <h2>
+                Добавить нового сотрудника
+            </h2>
+            <p>
+                Заполните информацию о новом сотруднике
+            </p>
+        </div>
+        <form>
+            <div class="class=" modal-advertisement-form"">
+                <div>
+                    <label for="firstname">Имя</label>
+                    <input type="text" id="firstname" name="firstname" required>
+                </div>
+                <div>
+                    <label for="lastname">Фамилия</label>
+                    <input type="text" id="lastname" name="lastname" required>
+                </div>
+                <div>
+                    <label for="secondname">Отчество</label>
+                    <input type="text" id="secondname" name="secondname">
+                </div>
+                <div>
+                    <label for="content">Email</label>
+                    <input type="text" id="email" name="email" required></input>
+                </div>
+                <div>
+                    <label>Должность</label>
+                    <select>
+                        <option>Рабочее</option>
+                        <option>На обслуживании</option>
+                        <option>Неисправно</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Отдел</label>
+                    <select>
+                        <option>Рабочее</option>
+                        <option>На обслуживании</option>
+                        <option>Неисправно</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Роль</label>
+                    <select>
+                        <option>Пользователь</option>
+                        <option>Администратор</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="InventoryNumber">Контактный телефон</label>
+                    <input type="text" id="InventoryNumber" name="InventoryNumber" />
+                </div>
+                <div>
+                    <label>Номер кабинета</label>
+                    <select>
+                        <option>300</option>
+                    </select>
+                </div>
+            </div>
+            <div style="justify-content: flex-end; flex-direction: row; display: flex;">
+                <button class="button cancel-modal" onclick="closeEmployeeModal()">Отменить</button>
+                <button type="submit" class="button submit-advertisement">Сохранить</button>
+            </div>
+        </form>
+        <button class="modal-close" onclick="closeItemModal()">&times;</button>
+    </div>
+</div>
 
 @section Scripts {
     <script>
@@ -166,6 +236,19 @@
                 }
             });
         });
+        function openEmployeeModal() {
+            document.getElementById('addEmployeeModal').classList.add('active');
+        }
 
+        function closeEmployeeModal() {
+            document.getElementById('addEmployeeModal').classList.remove('active');
+        }
+
+        // Закрытие модального окна при клике вне контента
+        document.getElementById('addEmployeeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEmployeeModal();
+            }
+        });
     </script>
 }

@@ -44,5 +44,37 @@ namespace ErmakovAppDiplom.Controllers
 
             return View(userViewModels);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(UserFilterViewModel userFilter)
+        {
+            var users = _userRepository.GetAllByFilter(userFilter);
+            var userViewModels = new List<UserTableViewModel>();
+
+            if (users != null)
+            {
+                foreach (var user in users)
+                {
+                    var roles = await _userManager.GetRolesAsync(user);
+                    userViewModels.Add(new UserTableViewModel
+                    {
+                        FirstName = user.FirstName,
+                        SecondName = user.SecondName,
+                        LastName = user.LastName,
+                        PostName = user.Post?.Name,
+                        LocationName = user.Sublocation?.Location.Name,
+                        SublocationName = user.Sublocation?.Name,
+                        SectionName = user.Section?.Name,
+                        Email = user.Email,
+                        IsActive = user.IsActive,
+                        Roles = roles.ToList()
+                    });
+                }
+            }
+
+            ViewBag.Search = userFilter.Search;
+
+            return View(userViewModels);
+        }
     }
 }

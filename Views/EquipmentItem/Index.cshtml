@@ -25,30 +25,31 @@
             </button>
         </div>
         <div class="content-body">
-            <div class="filter-content">
+            <form class="filter-content">
                 <div class="filter-search-container">
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" data-lov-id="src/pages/Equipment.tsx:409:14" data-lov-name="Search" data-component-path="src/pages/Equipment.tsx" data-component-line="409" data-component-file="Equipment.tsx" data-component-name="Search" data-component-content="%7B%22className%22%3A%22absolute%20left-3%20top-1%2F2%20transform%20-translate-y-1%2F2%20text-gray-400%20h-4%20w-4%22%7D"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-                    <input class="filter-search-container-input" type="type" name="name" value="" placeholder="Поиск по названию, модели, инвентарному номеру..." />
+                    <input class="filter-search-container-input" type="type" name="Search" value="" placeholder="Поиск по названию, модели, инвентарному номеру..." />
                 </div>
                 <div style="display: flex; gap: .5rem;">
                     <div class="filter-status-button-container">
                         <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter h-4 w-4 text-gray-400" data-lov-id="src/pages/Equipment.tsx:419:16" data-lov-name="Filter" data-component-path="src/pages/Equipment.tsx" data-component-line="419" data-component-file="Equipment.tsx" data-component-name="Filter" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20text-gray-400%22%7D"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                        <select class="types-select">
+                        <select class="types-select" name="Status">
                             <option value="all">Все статусы</option>
                             <option value="status1">Работает</option>
                             <option value="status2">На обслуживании</option>
                             <option value="status3">Неисправен</option>
                         </select>
                     </div>
-                    <select class="types-select">
+                    <select class="types-select" name="CategoryId">
                         <option value="all">Все категории</option>
                         @foreach(Category category in categories)
                         {
                             <option value="@category.Id">@category.Name</option>
                         }
                     </select>
+                    <button type="submit" class="filter-button">Фильтр</button>
                 </div>
-            </div>
+            </form>
             <div class="content">
                 <div class="equipment-tab-list">
                     <button class="task-tab-button active" data-tab="spisok" role="tab" aria-selected="true">Список</button>
@@ -58,7 +59,7 @@
                     <div class="task-tab-content active" id="tab-spisok">
                         <table class="table-spisok">
                             <thead>
-                                <tr>
+                                <tr style="background-color: #f9fafb;">
                                     <th>Тип</th>
                                     <th>Название/Модель</th>
                                     <th>Инв. номер</th>

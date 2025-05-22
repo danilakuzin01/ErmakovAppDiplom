@@ -131,7 +131,16 @@ main {
     border: none;
     background-color: #f9fafb80;
     color: #9ca3af;
+    border-radius: 9999px;
+    justify-content: center;
+    align-items: center;
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
 }
+    .btn:hover {
+        background-color: #f1f5f9;
+    }
 
 .search-icon {
     position: absolute;
@@ -164,10 +173,6 @@ main {
     margin-right: calc(1rem * 0);
     margin-left: calc(1rem* calc(1 - 0));
 }
-
-    .nav-right-btns button {
-        width: 2.5rem;
-    }
 
 .logo:hover {
     filter: drop-shadow(0 0 2em #646cffaa);

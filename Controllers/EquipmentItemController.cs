@@ -1,6 +1,8 @@
 ﻿using ErmakovAppDiplom.Models;
+using ErmakovAppDiplom.Repositories;
 using ErmakovAppDiplom.Repositories.IRepositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ErmakovAppDiplom.Controllers
@@ -10,16 +12,20 @@ namespace ErmakovAppDiplom.Controllers
     {
         private readonly IEquipmentItemRepository _repository;
         private readonly ICategoryRepository _categoryRepository;
-
-        public EquipmentItemController(IEquipmentItemRepository repository, ICategoryRepository categoryRepository)
+        private readonly IUserRepository _userRepository;
+        public EquipmentItemController(IEquipmentItemRepository repository, ICategoryRepository categoryRepository, IUserRepository userRepository)
         {
             _repository = repository;
             _categoryRepository = categoryRepository;
+            _userRepository = userRepository;
         }
 
         public IActionResult Index()
         {
             List<EquipmentItem> equipmentItems = _repository.GetAll();
+            ViewBag.Categories = _categoryRepository.GetAll();
+            ViewBag.Employees = _userRepository.GetAll();
+
             return View(equipmentItems);
         }
 

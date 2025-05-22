@@ -2,6 +2,7 @@
     ViewData["Title"] = "Home Page";
     var username = ViewData["Username"] as string;
     List<TaskModel> allTasks = ViewBag.Tasks;
+    List<TaskModel> waitingTasks = ViewBag.WaitingTasks;
     List<TaskModel> inWorkTasks = ViewBag.InWorkTasks;
     List<TaskModel> completedTasks = ViewBag.CompletedTasks;
 }
@@ -34,7 +35,7 @@
             <div class="card-content">
                 <div style="justify-content: space-between; align-items: center; display: flex;">
                     <div>
-                        <p class="issue-count">0</p>
+                        <p class="issue-count"> @(waitingTasks.Count + inWorkTasks.Count)</p>
                         <p class="issue-content-text">Требуют внимания</p>
                     </div>
                     <div>
@@ -73,7 +74,6 @@
                     <button class="card-button">Управление</button>
                 </form>
             </div>
-
         </div>
     </div>
 
@@ -84,25 +84,63 @@
                     <h3>Объявления</h3>
                     <p>Важная информация для сотрудников</p>
                 </div>
-                <button class="dashboard-card-button">
+                <button class="dashboard-card-button" onclick="openModalAdvertisement()">
                     <svg width="1rem" height="1rem" class="w-6 h-6 text-red-500">
                         <use href="#icon-plus"></use>
-                    </svg>                    
+                    </svg>
                     Добавить
                 </button>
             </div>
 
-            <div class="dashboard-card-body">
+            <div class="modal" id="addAnnouncementModal">
+                <div class="modal-content">
+                    <div>
+                        <h2>Новое объявление</h2>
+                        <p>Создайте новое объявление для сотрудников</p>
+                    </div>
+                    <form asp-controller="Advertisement" asp-action="Create" method="post">
+                        <div class="class=" modal-advertisement-form"">
+                            <div>
+                                <label for="title">Заголовок</label>
+                                <input type="text" id="title" name="Title" required>
+                            </div>
+                            <div>
+                                <label for="content">Содержание</label>
+                                <textarea id="content" name="Description" required></textarea>
+                            </div>
+                        </div>
+                        <div style="justify-content: flex-end; flex-direction: row; display: flex;">
+                            <button class="button cancel-modal">Отменить</button>
+                            <button type="submit" class="button submit-advertisement">Сохранить</button>
+                        </div>
+                    </form>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+            </div>
 
-                <!-- Обернуть в цикл -->
-                @foreach(Advertisement advertisement in ViewBag.Advertisements)
+            
+            <div class="dashboard-card-body">
+                @foreach (Advertisement advertisement in ViewBag.Advertisements)
                 {
                     <div class="dashboard-card-advertisement">
                         <div class="dashboard-card-advertisement-container">
+                            <form asp-action="Delete" asp-controller="Advertisement" asp-route-id="@advertisement.Id" method="post">
+                                <button type="submit" style="background-color: white; width: 1rem; height: 1rem; position: relative; float: right; margin-top: -20px; margin-right: -15px">
+                                    <svg width="1rem" height="1rem" viewBox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+                                        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+                                            <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-469.000000, -1041.000000)" fill="#000000">
+                                                <path d="M487.148,1053.48 L492.813,1047.82 C494.376,1046.26 494.376,1043.72 492.813,1042.16 C491.248,1040.59 488.712,1040.59 487.148,1042.16 L481.484,1047.82 L475.82,1042.16 C474.257,1040.59 471.721,1040.59 470.156,1042.16 C468.593,1043.72 468.593,1046.26 470.156,1047.82 L475.82,1053.48 L470.156,1059.15 C468.593,1060.71 468.593,1063.25 470.156,1064.81 C471.721,1066.38 474.257,1066.38 475.82,1064.81 L481.484,1059.15 L487.148,1064.81 C488.712,1066.38 491.248,1066.38 492.813,1064.81 C494.376,1063.25 494.376,1060.71 492.813,1059.15 L487.148,1053.48" id="cross" sketch:type="MSShapeGroup">
+                                                </path>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </button>
+                            </form>
                             <div class="advertisement-head">
                                 <h3 class="advertisement-title">@advertisement.Title</h3>
                                 <span class="advertisement-date">@advertisement.PublishDate.ToString("yyyy-MM-dd")</span>
                             </div>
+                            
                             <p class="advertisement-text">
                                 @advertisement.Description
                             </p>
@@ -113,9 +151,7 @@
                     </div>
                 }
             </div>
-        </div> 
-
-
+        </div>
 
         <div class="dashboard-card">
             <div class="dashboard-card-title">
@@ -123,10 +159,10 @@
                     <h3>Задачи</h3>
                     <p>Текущие задания для IT-отдела</p>
                 </div>
-                <button class="dashboard-card-button">
+                <button class="dashboard-card-button" onclick="openTaskModal()">
                     <svg width="1rem" height="1rem" class="w-6 h-6 text-red-500">
                         <use href="#icon-plus"></use>
-                    </svg>                    
+                    </svg>
                     Добавить
                 </button>
             </div>
@@ -158,7 +194,7 @@
                                         <span class="task-record-date">Срок: @task.DeadLine.ToString("MM/dd/yyyy")</span>
                                         <div class="task-record-status @(task.Status.Equals("Выполнено") ? "done" : task.Status.Equals("В процессе") ? "inprogress" : "waiting")">@task.Status</div>
                                     </div>
-                                    @if(task.Status != "Выполнено")
+                                    @if (task.Status != "Выполнено")
                                     {
                                         <form asp-action="SetCompleted" asp-controller="Task" asp-route-id="@task.Id" method="post">
                                             <button class="task-record-button" type="submit">
@@ -222,7 +258,44 @@
                         }
                     </div>
                 </div>
+                <div class="modal" id="addTaskModal">
+                    <div class="modal-content">
+                        <div>
+                            <h2>Новая задача</h2>
+                            <p>Создайте новую задачу для IT-отдела</p>
+                        </div>
+                        <form asp-controller="Task" asp-action="Create" method="post">
+                            <div class="modal-advertisement-form">
+                                <div>
+                                    <label for="title">Название</label>
+                                    <input type="text" id="title" name="Title" required />
+                                </div>
+                                <div>
+                                    <label for="description">Описание</label>
+                                    <textarea id="description" name="Description" required></textarea>
+                                </div>
+                                <div>
+                                    <label>Приоритет</label>
+                                    <select id="difficult" name="Difficult">
+                                        <option value="Низкий">Низкий</option>
+                                        <option value="Средний">Средний</option>
+                                        <option value="Срочно">Срочно</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="deadline">Срок выполнения</label>
+                                    <input type="date" id="deadline" name="DeadLine" required />
+                                </div>
+                            </div>
+                            <div style="justify-content: flex-end; flex-direction: row; display: flex;">
+                                <button type="button" class="button cancel-modal">Отменить</button>
+                                <button type="submit" class="button submit-advertisement">Сохранить</button>
+                            </div>
+                        </form>
 
+                        <button class="modal-close" onclick="closeTaskModal()">&times;</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -239,7 +312,7 @@
 
 </div>
 
-@section Scripts{
+@section Scripts {
     <script>
         document.querySelectorAll('.task-tab-button').forEach(button => {
             button.addEventListener('click', () => {
@@ -256,6 +329,38 @@
 
                 document.getElementById('tab-' + tab).classList.add('active');
             });
+        });
+    </script>
+
+    <script>
+        function openModalAdvertisement() {
+            document.getElementById('addAnnouncementModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('addAnnouncementModal').classList.remove('active');
+        }
+
+        // Закрытие модального окна при клике вне контента
+        document.getElementById('addAnnouncementModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        function openTaskModal() {
+            document.getElementById('addTaskModal').classList.add('active');
+        }
+
+        function closeTaskModal() {
+            document.getElementById('addTaskModal').classList.remove('active');
+        }
+
+        // Закрытие модального окна при клике вне контента
+        document.getElementById('addTaskModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTaskModal();
+            }
         });
     </script>
 }

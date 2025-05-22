@@ -22,7 +22,7 @@
                 </p>
             </div>
             <div class="functional-buttons-container">
-                <button>
+                <button id="editDevicesButton">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen h-4 w-4 mr-1" data-lov-id="src/pages/OfficeMap.tsx:1055:18" data-lov-name="Edit" data-component-path="src/pages/OfficeMap.tsx" data-component-line="1055" data-component-file="OfficeMap.tsx" data-component-name="Edit" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20mr-1%22%7D"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path></svg>
                     Редактировать устройства
                 </button>
@@ -40,7 +40,7 @@
                         @foreach (Floor floor in floors)
                         {
                             <button class="floor-button @(floor.Id == floors.First().Id ? "active" : "")"
-                            data-tab="floor @floor.Id">
+                                    data-tab="floor @floor.Id">
                                 @floor.Name
                             </button>
                         }
@@ -51,14 +51,14 @@
             @foreach (Floor floor in floors)
             {
                 <div class="tab-content @(floor.Id == floors.First().Id ? "active" : "") task-tab-content"
-                id="tab-floor @floor.Id">
+                     id="tab-floor @floor.Id">
                     <div class="tab-map-content">
                         <div class="map">
                             <div class="content">
                                 @foreach (SubLocation location in locations.Where(l => l.Floor.Id == floor.Id))
                                 {
                                     <div class="location"
-                                    style="width: @(location.Width)px;
+                                         style="width: @(location.Width)px;
                                         height: @(location.Height)px;
                                         top: @(location.PositionY)px;
                                         left: @(location.PositionX)px;">
@@ -67,9 +67,16 @@
                                         </div>
                                     </div>
                                 }
-                                @foreach(EquipmentItem item in items.Where(i => i.SubLocation.Floor.Id == floor.Id))
+                                @foreach (EquipmentItem item in items.Where(i => i.SubLocation.Floor.Id == floor.Id))
                                 {
-                                    <div style="z-index:2; position: absolute; left: @(item.PositionX)px; top: @(item.PositionY)px;">
+                                    <div class="equipment-item" style="z-index:2; position: absolute; left: @(item.PositionX)px; top: @(item.PositionY)px;"
+                                         data-id="@item.Id"
+                                         data-name="@item.Name"
+                                         data-category="@item.Category.Name"
+                                         data-status="@item.Status"
+                                         data-position-x="@item.PositionX"
+                                         data-position-y="@item.PositionY"
+                                         onclick="openEditModal(this)">
                                         <div class="item-container @(item.Status.Equals("Работает") ? "worked" : "danger")">
                                             <div class="item @(item.Status == "Работает" ? "worked" : "danger")">
                                                 <svg class="w-6 h-6 text-red-500 icon-svg">
@@ -92,7 +99,7 @@
                                                 </svg>
                                             </div>
                                         </div>
-                                   </div>
+                                    </div>
                                 }
                             </div>
                         </div>
@@ -107,55 +114,161 @@
                         <div class="icon-container-wrapper">
                             <div class="icon-container">
                                 <svg class="w-6 h-6 text-red-500 icon-svg">
-                                        @if (category.Name.Equals("Компьютер") || category.Name.Equals("Монитор"))
-                                        {
-                                            <use href="#icon-computer" />
-                                        }
-                                        else if (category.Name.Equals("Принтер"))
-                                        {
-                                            <use href="#icon-printer" />
-                                        }
-                                        else if (category.Name.Equals("Сервер"))
-                                        {
-                                            <use href="#icon-server" />
-                                        }
-                                        else if (category.Name.Equals("Сетевое оборудование"))
-                                        {
+                                    @if (category.Name.Equals("Компьютер") || category.Name.Equals("Монитор"))
+                                    {
+                                        <use href="#icon-computer" />
+                                    }
+                                    else if (category.Name.Equals("Принтер"))
+                                    {
+                                        <use href="#icon-printer" />
+                                    }
+                                    else if (category.Name.Equals("Сервер"))
+                                    {
+                                        <use href="#icon-server" />
+                                    }
+                                    else if (category.Name.Equals("Сетевое оборудование"))
+                                    {
 
-                                            <use href="#icon-internet-settings" />
-                                        }
+                                        <use href="#icon-internet-settings" />
+                                    }
                                 </svg>
                             </div>
                         </div>
                         <span>@category.Name</span>
                     </div>
                 }
-                
-                
             </div>
         </div>
+    </div>
+</div>
+<div class="modal fade" id="editEquipmentModal" tabindex="-1" aria-labelledby="editEquipmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="min-width: 600px">
+            <div class="modal-header">
+                <h2 class="modal-title" id="editEquipmentModalLabel">Редактировать оборудование</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editEquipmentForm">
+                    <input type="hidden" id="equipmentId" name="equipmentId" />
+                    <div class="mb-3">
+                        <label for="equipmentName" class="form-label">Название</label>
+                        <input type="text" class="form-control" id="equipmentName" name="equipmentName" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipmentCategory" class="form-label">Категория</label>
+                        <select class="form-select" id="equipmentCategory" name="equipmentCategory">
+                            @foreach (Category category in categories)
+                            {
+                                <option value="@category.Name">@category.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipmentStatus" class="form-label">Кабинет</label>
+                        <select class="form-select" id="equipmentStatus" name="equipmentStatus">
+                            <option value="status1">Работает</option>
+                            <option value="status2">На обслуживании</option>
+                            <option value="status3">Неисправен</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipmentStatus" class="form-label">Статус</label>
+                        <select class="form-select" id="equipmentStatus" name="equipmentStatus">
+                            <option value="status1">Работает</option>
+                            <option value="status2">На обслуживании</option>
+                            <option value="status3">Неисправен</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipmentPositionX" class="form-label">Позиция X</label>
+                        <input type="number" class="form-control" id="equipmentPositionX" name="equipmentPositionX" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipmentPositionY" class="form-label">Позиция Y</label>
+                        <input type="number" class="form-control" id="equipmentPositionY" name="equipmentPositionY" />
+                    </div>
+                </form>
+            </div>
+            <div style="justify-content: flex-end; flex-direction: row; display: flex;">
+                <button class="button cancel-modal" onclick="closeEditModal()">Отменить</button>
+                <button type="submit" class="button submit-advertisement">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        @section Scripts {
-            <script>
-                document.querySelectorAll('.floor-button').forEach(button => {
-                    button.addEventListener('click', () => {
-                        // Активная кнопка
-                        document.querySelectorAll('.floor-button').forEach(btn => btn.classList.remove('active'));
-                        button.classList.add('active');
+@section Scripts {
+    <script>
+        let isEditMode = false;
 
-                        // Активный контент
-                        const tab = button.getAttribute('data-tab');
+        document.getElementById('editDevicesButton').addEventListener('click', function () {
+            isEditMode = !isEditMode;
+            const equipmentItems = document.querySelectorAll('.equipment-item');
+            equipmentItems.forEach(item => {
+                item.setAttribute('data-edit-mode', isEditMode);
+                item.style.cursor = isEditMode ? 'pointer' : 'default';
+            });
+            this.textContent = isEditMode ? 'Завершить редактирование' : 'Редактировать устройства';
+            this.style.background = isEditMode ? 'black' : 'white';
+            this.style.color = isEditMode ? 'white' : 'black';
+                    const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen h-4 w-4 mr-1" data-lov-id="src/pages/OfficeMap.tsx:1055:18" data-lov-name="Edit" data-component-path="src/pages/OfficeMap.tsx" data-component-line="1055" data-component-file="OfficeMap.tsx" data-component-name="Edit" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20mr-1%22%7D"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path></svg>';
+            this.innerHTML = `${svg} ${this.textContent}`;
+        });
 
-                        document.querySelectorAll('.task-tab-content').forEach(content => {
-                            content.classList.remove('active');
-                        });
+        document.querySelectorAll('.floor-button').forEach(button => {
+            button.addEventListener('click', () => {
+                // Активная кнопка
+                document.querySelectorAll('.floor-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
 
-                        console.log(tab)
-                        const target = document.getElementById('tab-' + tab);
-                        if (target) {
-                            target.classList.add('active');
-                        }
-                    });
+                // Активный контент
+                const tab = button.getAttribute('data-tab');
+
+                document.querySelectorAll('.task-tab-content').forEach(content => {
+                    content.classList.remove('active');
                 });
-            </script>
+
+                console.log(tab)
+                const target = document.getElementById('tab-' + tab);
+                if (target) {
+                    target.classList.add('active');
+                }
+            });
+        });
+
+
+        function openEditModal(element) {
+            if (element.getAttribute('data-edit-mode') !== 'true') {
+                return;
+            }
+            // Получаем данные из атрибутов data-*
+            const id = element.getAttribute('data-id');
+            const name = element.getAttribute('data-name');
+            const category = element.getAttribute('data-category');
+            const status = element.getAttribute('data-status');
+            const positionX = element.getAttribute('data-position-x');
+            const positionY = element.getAttribute('data-position-y');
+
+            // Заполняем форму в модальном окне
+            document.getElementById('equipmentId').value = id;
+            document.getElementById('equipmentName').value = name;
+            document.getElementById('equipmentCategory').value = category;
+            document.getElementById('equipmentStatus').value = status;
+            document.getElementById('equipmentPositionX').value = positionX;
+            document.getElementById('equipmentPositionY').value = positionY;
+
+            // Открываем модальное окно (для Bootstrap)
+            document.getElementById('editEquipmentModal').classList.add('active');
         }
+        function closeEditModal() {
+            document.getElementById('editEquipmentModal').classList.remove('active');
+        }
+         // Закрытие модального окна при клике вне контента
+        document.getElementById('editEquipmentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
+    </script>
+}

@@ -382,3 +382,132 @@
         display: inline-flex;
         margin-top: .75rem;
     }
+
+/* Стили для модального окна */
+.modal {
+    animation-name: enter;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    padding: 24px;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #666;
+}
+
+    .modal-close:hover {
+        color: #333;
+    }
+
+.modal h2 {
+    margin: 0 0 20px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -.025em;
+    margin: 0;
+    color: black;
+}
+.modal p {
+    margin: 0;
+    font-size: .875rem;
+    line-height: 1.25rem;
+    margin-top: .375rem;
+    margin-bottom: .375rem;
+}
+
+.modal form {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.modal label {
+    font-weight: 500;
+    line-height: 1;
+    font-size: .875rem;
+    color: black;
+}
+
+.modal select,
+.modal input,
+.modal textarea {
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    font-size: .875rem;
+    line-height: 1.25rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    padding-left: .75rem;
+    padding-right: .75rem;
+    border-color: #e2e8f0;
+    border-width: 1px;
+    border-radius: calc(.5rem - 2px);
+    width: 100%;
+    height: 2.5rem;
+    display: flex;
+    box-sizing: border-box;
+    border-style: solid;
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+}
+
+.modal textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+.button {
+    font-weight: 600;
+    font-size: .875rem;
+    line-height: 1.25rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-width: 1px;
+    border-radius: calc(.5rem - 2px);
+    white-space: nowrap;
+    gap: .5rem;
+    justify-content: center;
+    align-items: center;
+    height: 2.5rem;
+    display: inline-flex;
+    cursor: pointer;
+}
+    .button.cancel-modal {
+        background-color: white;
+        border-color: #e2e8f0;
+    }
+    .button.submit-advertisement {
+        color: #f8fafc;
+        background-color: #0f172a;
+        margin-right: .5rem;
+        margin-left: .5rem;
+    }
+
+/* Показ модального окна */
+.modal.active {
+    display: flex;
+}

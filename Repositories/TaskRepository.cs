@@ -22,6 +22,10 @@ namespace ErmakovAppDiplom.Repositories
             return _context.Tasks.Where(t => t.Status.Equals("Выполнено")).ToList();
         }
 
+        public List<TaskModel> GetWaiting()
+        {
+            return _context.Tasks.Where(t => t.Status.Equals("Ожидает")).ToList();
+        }
         public List<TaskModel> GetInProgress()
         {
             return _context.Tasks.Where(t => t.Status.Equals("В процессе")).ToList();
@@ -38,6 +42,22 @@ namespace ErmakovAppDiplom.Repositories
             task.Status = "Выполнено";
             _context.Tasks.Update(task);
             _context.SaveChanges();
+        }
+
+        public void Create(TaskModel task)
+        {
+            _context.Tasks.Add(task);
+            _context.SaveChanges();
+        }
+
+        public void Update(TaskModel task)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(long id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

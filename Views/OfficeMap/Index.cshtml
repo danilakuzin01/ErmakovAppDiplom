@@ -95,6 +95,9 @@
                                                     else if (item.Category.Name.Equals("Сетевое оборудование"))
                                                     {
                                                         <use href="#icon-internet-settings" />
+                                                    } else if (item.Category.Name.Equals("Камера"))
+                                                    {
+                                                        <use href="#icon-camera" />
                                                     }
                                                 </svg>
                                             </div>
@@ -128,8 +131,11 @@
                                     }
                                     else if (category.Name.Equals("Сетевое оборудование"))
                                     {
-
                                         <use href="#icon-internet-settings" />
+                                    }
+                                    else if (category.Name.Equals("Камера"))
+                                    {
+                                        <use href="#icon-camera" />
                                     }
                                 </svg>
                             </div>
@@ -141,6 +147,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="editEquipmentModal" tabindex="-1" aria-labelledby="editEquipmentModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="min-width: 600px">
@@ -149,15 +156,15 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editEquipmentForm">
-                    <input type="hidden" id="equipmentId" name="equipmentId" />
+                <form id="editEquipmentForm" asp-action="EditEquipment">
+                    <input type="hidden" id="equipmentId" name="EquipmentItemId" />
                     <div class="mb-3">
                         <label for="equipmentName" class="form-label">Название</label>
-                        <input type="text" class="form-control" id="equipmentName" name="equipmentName" />
+                        <input type="text" class="form-control" id="equipmentName" name="Name" />
                     </div>
                     <div class="mb-3">
                         <label for="equipmentCategory" class="form-label">Категория</label>
-                        <select class="form-select" id="equipmentCategory" name="equipmentCategory">
+                        <select class="form-select" id="equipmentCategory" name="equipmentCategory" disabled>
                             @foreach (Category category in categories)
                             {
                                 <option value="@category.Name">@category.Name</option>
@@ -165,34 +172,28 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="equipmentStatus" class="form-label">Кабинет</label>
-                        <select class="form-select" id="equipmentStatus" name="equipmentStatus">
-                            <option value="status1">Работает</option>
-                            <option value="status2">На обслуживании</option>
-                            <option value="status3">Неисправен</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
                         <label for="equipmentStatus" class="form-label">Статус</label>
-                        <select class="form-select" id="equipmentStatus" name="equipmentStatus">
-                            <option value="status1">Работает</option>
-                            <option value="status2">На обслуживании</option>
-                            <option value="status3">Неисправен</option>
+                        <select class="form-select" id="equipmentStatus" name="Status">
+                            <option value="all">Все статусы</option>
+                            <option value="Работает">Работает</option>
+                            <option value="На обслуживании">На обслуживании</option>
+                            <option value="Неисправен">Неисправен</option>
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="equipmentPositionX" class="form-label">Позиция X</label>
-                        <input type="number" class="form-control" id="equipmentPositionX" name="equipmentPositionX" />
                     </div>
                     <div class="mb-3">
                         <label for="equipmentPositionY" class="form-label">Позиция Y</label>
-                        <input type="number" class="form-control" id="equipmentPositionY" name="equipmentPositionY" />
+                        <input type="number" class="form-control" id="equipmentPositionY" name="PositionY" min="0" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipmentPositionX" class="form-label">Позиция X</label>
+                        <input type="number" class="form-control" id="equipmentPositionX" name="PositionX" min="0" />
+                    </div>
+
+                    <div style="justify-content: flex-end; flex-direction: row; display: flex;">
+                        <button class="button cancel-modal" onclick="closeEditModal()">Отменить</button>
+                        <button type="submit" class="button submit-advertisement">Сохранить</button>
                     </div>
                 </form>
-            </div>
-            <div style="justify-content: flex-end; flex-direction: row; display: flex;">
-                <button class="button cancel-modal" onclick="closeEditModal()">Отменить</button>
-                <button type="submit" class="button submit-advertisement">Сохранить</button>
             </div>
         </div>
     </div>
@@ -237,11 +238,10 @@
             });
         });
 
-
         function openEditModal(element) {
-            if (element.getAttribute('data-edit-mode') !== 'true') {
+            if (element.getAttribute('data-edit-mode') !== 'true')
                 return;
-            }
+
             // Получаем данные из атрибутов data-*
             const id = element.getAttribute('data-id');
             const name = element.getAttribute('data-name');
@@ -249,7 +249,6 @@
             const status = element.getAttribute('data-status');
             const positionX = element.getAttribute('data-position-x');
             const positionY = element.getAttribute('data-position-y');
-
             // Заполняем форму в модальном окне
             document.getElementById('equipmentId').value = id;
             document.getElementById('equipmentName').value = name;
@@ -261,6 +260,7 @@
             // Открываем модальное окно (для Bootstrap)
             document.getElementById('editEquipmentModal').classList.add('active');
         }
+
         function closeEditModal() {
             document.getElementById('editEquipmentModal').classList.remove('active');
         }

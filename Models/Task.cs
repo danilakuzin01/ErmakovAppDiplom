@@ -8,5 +8,6 @@
         public DateTime DeadLine { get; set; }
         public string Difficult { get; set; }
         public string Status { get; set; }
+        public User User { get; set; }
     }
 }

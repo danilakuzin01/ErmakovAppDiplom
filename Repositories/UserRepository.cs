@@ -69,5 +69,10 @@ namespace ErmakovAppDiplom.Repositories
                 
             return users.ToList();
         }
+
+        public User GetById(string id)
+        {
+            return _context.Users.FirstOrDefault(u => u.Id.Equals(id));
+        }
     }
 }

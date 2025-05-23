@@ -7,6 +7,7 @@ namespace ErmakovAppDiplom.Repositories.IRepositories
     {
         List<User> GetAll();
         User GetByUsername(string userName);
+        User GetById(string  id);
         void Create(User user);
         void Update(User user);
         void Delete(int id);

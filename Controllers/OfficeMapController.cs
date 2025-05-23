@@ -1,4 +1,5 @@
 ﻿using ErmakovAppDiplom.Models;
+using ErmakovAppDiplom.Models.ViewModel;
 using ErmakovAppDiplom.Repositories;
 using ErmakovAppDiplom.Repositories.IRepositories;
 using Microsoft.AspNetCore.Mvc;
@@ -25,12 +26,25 @@ namespace ErmakovAppDiplom.Controllers
             List<Floor> floors = _floorRepository.GetAll();
             List<SubLocation> locations = _subLocationRepository.GetAll();
             List<Category> categories = _categoryRepository.GetAll();
-            List<EquipmentItem> items = _equipmentItemRepository.GetAll();
+            List<EquipmentItem> items = _equipmentItemRepository.GetAll().Where(e => e.SubLocation != null).ToList();
             ViewBag.Floors = floors;
             ViewBag.Locations = locations;
             ViewBag.Categories = categories;
             ViewBag.EquipmentItems = items;
             return View();
+        }
+
+        public IActionResult EditEquipment(OfficeMapEquipmentItemEditViewModel equipmentItem)
+        {
+            EquipmentItem existingItem = _equipmentItemRepository.GetById(equipmentItem.EquipmentItemId);
+            existingItem.PositionX = equipmentItem.PositionX;
+            existingItem.PositionY = equipmentItem.PositionY;
+            existingItem.Status = equipmentItem.Status;
+            existingItem.Name = equipmentItem.Name;
+
+            _equipmentItemRepository.Update(existingItem);
+
+            return RedirectToAction("Index");
         }
     }
 }

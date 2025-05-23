@@ -14,9 +14,9 @@ namespace ErmakovAppDiplom.Repositories
             _context = context;
         }
 
-        public void Create(EquipmentItem staff)
+        public void Create(EquipmentItem item)
         {
-            _context.EquipmentItems.Add(staff);
+            _context.EquipmentItems.Add(item);
             _context.SaveChanges();
         }
 
@@ -32,23 +32,15 @@ namespace ErmakovAppDiplom.Repositories
 
         public List<EquipmentItem> GetAll()
         {
-            //return _context.EquipmentItems
-            //    .Include(x => x.User)
-            //    .Include(x => x.Category)
-            //    .Include(x => x.SubLocation)
-            //        .ThenInclude(y => y.Location)
-            //    .ToList();
-
-
             return _context.EquipmentItems
-                        .Include(x => x.User)
+                    .Include(x => x.User)
                     .Include(x => x.Category)
                     .Include(x => x.SubLocation)
                         .ThenInclude(y => y.Location)
                 .ToList();
         }
 
-        public List<EquipmentItem> GetAllByFilter(EquipmentFilterViewModel equipmentFilter)
+        public List<EquipmentItem> GetAllByFilter(EquipmentItemFilterViewModel equipmentFilter)
         {
             IQueryable<EquipmentItem> equipments = _context.EquipmentItems
                 .Include(e => e.Category)
@@ -62,17 +54,31 @@ namespace ErmakovAppDiplom.Repositories
                     );
             }
 
+            if (equipmentFilter.FilterCategoryId != 0)
+            {
+                equipments = equipments.Where(e => e.Category.Id == equipmentFilter.FilterCategoryId);
+            }
+
+            if (!equipmentFilter.FilterStatus.Equals("all"))
+            {
+                equipments = equipments.Where(e => e.Status.Equals(equipmentFilter.FilterStatus));
+            }
+
             return equipments.ToList();
         }
 
         public EquipmentItem GetById(int id)
         {
-            return _context.EquipmentItems.Include(x => x.Category).FirstOrDefault(s => s.Id.Equals(id));
+            return _context.EquipmentItems
+                .Include(x => x.Category)
+                .Include(x => x.SubLocation)
+                .Include(x => x.User)
+                .FirstOrDefault(s => s.Id.Equals(id));
         }
 
-        public void Update(EquipmentItem staff)
+        public void Update(EquipmentItem item)
         {
-            _context.EquipmentItems.Update(staff);
+            _context.EquipmentItems.Update(item);
             _context.SaveChanges();
         }
     }

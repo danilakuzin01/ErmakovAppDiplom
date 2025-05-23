@@ -45,7 +45,7 @@ namespace ErmakovAppDiplom.Controllers
             return View(userViewModels);
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Index(UserFilterViewModel userFilter)
         {
             var users = _userRepository.GetAllByFilter(userFilter);

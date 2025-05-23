@@ -17,5 +17,10 @@ namespace ErmakovAppDiplom.Repositories
         {
             return _context.Sublocations.Include(x => x.Floor).ToList();
         }
+
+        public SubLocation GetById(long id)
+        {
+            return _context.Sublocations.FirstOrDefault(s => s.Id == id);
+        }
     }
 }

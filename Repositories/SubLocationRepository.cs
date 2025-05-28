@@ -15,7 +15,7 @@ namespace ErmakovAppDiplom.Repositories
 
         public List<SubLocation> GetAll()
         {
-            return _context.Sublocations.Include(x => x.Floor).ToList();
+            return _context.Sublocations.Include(x => x.Location).Include(x => x.Floor).ToList();
         }
 
         public SubLocation GetById(long id)

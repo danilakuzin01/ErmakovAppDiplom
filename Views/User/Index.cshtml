@@ -3,6 +3,9 @@
 
 @{
     ViewData["Title"] = "Пользователи";
+    List<Post> posts = ViewBag.Posts;
+    List<Section> sections = ViewBag.Sections;
+    List<SubLocation> subLocations = ViewBag.SubLocations;
 }
 
 <head>
@@ -144,8 +147,8 @@
     </div>
 </div>
 
-<div class="modal" id="addEmployeeModal">
-    <div class="modal-content">
+<div class="modal" id="addEmployeeModal" style="overflow-y: auto">
+    <div class="modal-content" style="top: 100px">
         <div>
             <h2>
                 Добавить нового сотрудника
@@ -154,55 +157,73 @@
                 Заполните информацию о новом сотруднике
             </p>
         </div>
-        <form>
+        <form asp-action="Create" method="post">
             <div class="class=" modal-advertisement-form"">
                 <div>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="Username" required>
+                </div>
+                <div>
+                    <label for="password">Пароль</label>
+                    <input type="text" id="password" name="Password" required>
+                </div>
+                <div>
                     <label for="firstname">Имя</label>
-                    <input type="text" id="firstname" name="firstname" required>
+                    <input type="text" id="firstname" name="FirstName" required>
                 </div>
                 <div>
                     <label for="lastname">Фамилия</label>
-                    <input type="text" id="lastname" name="lastname" required>
+                    <input type="text" id="lastname" name="LastName" required>
                 </div>
                 <div>
                     <label for="secondname">Отчество</label>
-                    <input type="text" id="secondname" name="secondname">
+                    <input type="text" id="secondname" name="SecondName">
                 </div>
                 <div>
                     <label for="content">Email</label>
-                    <input type="text" id="email" name="email" required></input>
+                    <input type="text" id="email" name="Email" required></input>
                 </div>
                 <div>
                     <label>Должность</label>
-                    <select>
-                        <option>Рабочее</option>
-                        <option>На обслуживании</option>
-                        <option>Неисправно</option>
+                    <select name="PostId">
+                        @if (posts != null)
+                        {
+                            @foreach (Post post in posts)
+                            {
+                                <option value="@post.Id">@post.Name</option>
+                            }
+                        }
                     </select>
                 </div>
                 <div>
                     <label>Отдел</label>
-                    <select>
-                        <option>Рабочее</option>
-                        <option>На обслуживании</option>
-                        <option>Неисправно</option>
+                    <select name="SectionId">
+                        @foreach (Section sec in sections)
+                        {
+                            <option value="@sec.Id">@sec.Name</option>
+                        }
                     </select>
                 </div>
                 <div>
                     <label>Роль</label>
-                    <select>
-                        <option>Пользователь</option>
-                        <option>Администратор</option>
+                    <select name="Role">
+                        <option value="User">Пользователь</option>
+                        <option value="Admin">Администратор</option>
                     </select>
                 </div>
                 <div>
-                    <label for="InventoryNumber">Контактный телефон</label>
-                    <input type="text" id="InventoryNumber" name="InventoryNumber" />
+                    <label for="Phone">Контактный телефон</label>
+                    <input type="text" id="Phone" name="Phone" />
                 </div>
                 <div>
                     <label>Номер кабинета</label>
-                    <select>
-                        <option>300</option>
+                    <select name="SublocationId">
+                        @if(subLocations != null){
+                            @foreach (SubLocation sub in subLocations)
+                            {
+                                <option value="@sub.Id">@sub.Location.Name (@sub.Name)</option>
+                            }
+                        }
                     </select>
                 </div>
             </div>

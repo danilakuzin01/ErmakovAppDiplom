@@ -36,7 +36,7 @@ namespace ErmakovAppDiplom.Controllers
 
             if (user.Section.Name.Equals("IT-отдел") || User.IsInRole("Admin"))
             {
-                ViewBag.Tasks = _taskRepository.GetAll();
+                ViewBag.Tasks = _taskRepository.GetAllLastTen();
                 ViewBag.InWorkTasks = _taskRepository.GetInProgress();
                 ViewBag.WaitingTasks = _taskRepository.GetWaiting();
                 ViewBag.CompletedTasks = _taskRepository.GetCompleted();

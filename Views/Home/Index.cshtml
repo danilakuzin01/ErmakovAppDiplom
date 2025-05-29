@@ -44,7 +44,10 @@
                             </div>
                         </div>
                     </div>
-                    <button class="card-button">Просмотреть все</button>
+
+                    <form asp-action="Index" asp-controller="Task" method="get">
+                        <button class="card-button" >Просмотреть все</button>
+                    </form>
                 </div>
 
             </div>

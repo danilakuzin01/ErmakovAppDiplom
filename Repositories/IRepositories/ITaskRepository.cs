@@ -5,6 +5,7 @@ namespace ErmakovAppDiplom.Repositories.IRepositories
     public interface ITaskRepository
     {
         List<TaskModel> GetAll();
+        List<TaskModel> GetAllLastTen();
         List<TaskModel> GetAllByUser(User user);
         List<TaskModel> GetWaiting();
         List<TaskModel> GetInProgress();

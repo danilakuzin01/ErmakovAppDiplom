@@ -104,6 +104,7 @@ namespace ErmakovAppDiplom.Controllers
                 Section = _sectionRepository.GetById(userCreateViewModel.SectionId) ?? null,
                 Sublocation = _subLocationRepository.GetById(userCreateViewModel.SublocationId) ?? null,
                 PhoneNumber = userCreateViewModel.Phone,
+                IsActive = true
             };
             var result = await _userManager.CreateAsync(user, userCreateViewModel.Password);
 

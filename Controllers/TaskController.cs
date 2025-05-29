@@ -12,11 +12,28 @@ namespace ErmakovAppDiplom.Controllers
 
         private readonly UserManager<User> _userManager;
         private ITaskRepository _taskRepository;
+        private IUserRepository _userRepository;
 
-        public TaskController(ITaskRepository taskRepository, UserManager<User> userManager)
+        public TaskController(UserManager<User> userManager, ITaskRepository taskRepository, IUserRepository userRepository)
         {
             _taskRepository = taskRepository;
             _userManager = userManager;
+            _userRepository = userRepository;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            // Получаем текущего пользователя
+            var user = await _userManager.GetUserAsync(User);
+            User currentUser = _userRepository.GetById(user.Id);
+            ViewBag.SectionName = currentUser.Section?.Name ?? null;
+            ViewBag.Tasks = _taskRepository.GetAll();
+            ViewBag.InWorkTasks = _taskRepository.GetInProgress();
+            ViewBag.WaitingTasks = _taskRepository.GetWaiting();
+            ViewBag.CompletedTasks = _taskRepository.GetCompleted();
+            List<TaskModel> tasks = _taskRepository.GetAll();
+            return View(tasks);
         }
 
         [HttpPost]

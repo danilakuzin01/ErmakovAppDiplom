@@ -72,7 +72,10 @@ namespace ErmakovAppDiplom.Repositories
 
         public User GetById(string id)
         {
-            return _context.Users.FirstOrDefault(u => u.Id.Equals(id));
+            return _context.Users
+                .Include(u => u.Post)
+                .Include(u => u.Section)
+                .FirstOrDefault(u => u.Id.Equals(id));
         }
     }
 }

@@ -84,7 +84,7 @@
                                                     <div style="width: 2.5rem; height: 2.5rem; flex-shrink: 0">
                                                         <span class="user-avatar">
                                                             <span style="align-items: center; width: 100%; height: 100%;justify-content: center; display: flex;">
-                                                                @user.LastName[0]@user.FirstName[0]@user.SecondName[0]
+                                                                @user.LastName[0]@user.FirstName[0]@(user.SecondName == null ? "" : user.SecondName[0])
                                                             </span>
                                                         </span>
                                                     </div>

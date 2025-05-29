@@ -109,5 +109,13 @@ namespace ErmakovAppDiplom.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public List<TaskModel> GetAllLastTen()
+        {
+            return _context.Tasks
+                 .Include(t => t.User)
+                 .Take(10)
+                 .ToList();
+        }
     }
 }

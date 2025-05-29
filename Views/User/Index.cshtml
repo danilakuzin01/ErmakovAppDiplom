@@ -6,6 +6,7 @@
     List<Post> posts = ViewBag.Posts;
     List<Section> sections = ViewBag.Sections;
     List<SubLocation> subLocations = ViewBag.SubLocations;
+    var selectedRole = ViewBag.RoleSearch as string ?? "";
 }
 
 <head>
@@ -41,16 +42,18 @@
                 <div style="display: flex; gap: .5rem;">
                     <div class="filter-status-button-container">
                         <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter h-4 w-4 text-gray-400" data-lov-id="src/pages/Equipment.tsx:419:16" data-lov-name="Filter" data-component-path="src/pages/Equipment.tsx" data-component-line="419" data-component-file="Equipment.tsx" data-component-name="Filter" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20text-gray-400%22%7D"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                        <select class="types-select" name="Role">
+                        <select class="types-select" name="RoleId">
                             <option value="all">Все роли</option>
-                            <option value="Администратор">Администраторы</option>
-                            <option value="Пользователи">Пользователи</option>
+                            <option selected="@(selectedRole == "Admin" ? "selected" : null)" value="Admin">Администраторы</option>
+                            <option selected="@(selectedRole == "User" ? "selected" : null)" value="User">Пользователи</option>
                         </select>
                     </div>
-                    <select class="types-select" name="PostId">
-                        <option value="all">Все отделы</option>
-                        <option value="type1">Руководство</option>
-                        <option value="type2">Бухгалтерия</option>
+                    <select class="types-select" name="SectionId">
+                        <option value="0">Все отделы</option>
+                        @foreach(Section sec in sections)
+                        {
+                            <option selected="@(ViewBag.SectionSearch == sec.Id ? "selected" : null)" value="@sec.Id">@sec.Name</option>
+                        }
                     </select>
                     <button type="submit" class="filter-button">Фильтр</button>
                 </div>

@@ -55,7 +55,8 @@ namespace ErmakovAppDiplom.Repositories
         public List<User> GetAllByFilter(UserFilterViewModel userFilter)
         {
             IQueryable<User> users = _context.Users
-                .Include(u => u.Post);
+                .Include(u => u.Post)
+                .Include(u => u.Section);
 
             if (!string.IsNullOrEmpty(userFilter.Search))
             {
@@ -66,7 +67,22 @@ namespace ErmakovAppDiplom.Repositories
                 || u.Post.Name.ToLower().Contains(userFilter.Search.ToLower())
                 );
             }
-                
+            
+            // фильтр по секциям
+            if (userFilter.SectionId != null && userFilter.SectionId != 0)
+            {
+                users = users.Where(u => u.SectionId.Equals(userFilter.SectionId));
+            }
+
+            // фильтр по роли
+            if (userFilter.RoleId != null && userFilter.RoleId != "all")
+            {
+                users = (from u in users
+                         join ur in _context.UserRoles on u.Id equals ur.UserId
+                         join r in _context.Roles on ur.RoleId equals r.Id
+                         where r.Name == userFilter.RoleId
+                         select u);
+            }
             return users.ToList();
         }
 

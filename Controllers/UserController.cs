@@ -88,6 +88,8 @@ namespace ErmakovAppDiplom.Controllers
             }
 
             ViewBag.Search = userFilter.Search;
+            ViewBag.SectionSearch = userFilter.SectionId;
+            ViewBag.RoleSearch = userFilter.RoleId;
 
             return View(userViewModels);
         }

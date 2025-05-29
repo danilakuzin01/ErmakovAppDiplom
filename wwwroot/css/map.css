@@ -91,7 +91,7 @@
     margin-top: .5rem;
 }
 .tab-map-content {
-    height: 600px;
+    min-height: 600px;
     width: 100%;
     background-color: white;
     border-color: #d1d5db;
@@ -187,4 +187,9 @@
 
 select[disabled]{
     color: black;
+}
+
+.editButtons:disabled,
+.editButtons[disabled] {
+    color: rgba(16, 16, 16, 0.3) !important;
 }

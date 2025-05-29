@@ -3,11 +3,11 @@
     List<SubLocation> locations = ViewBag.Locations;
     List<Category> categories = ViewBag.Categories;
     List<EquipmentItem> items = ViewBag.EquipmentItems;
+    List<Location> allLocations = ViewBag.AllLocations;
 }
 
 <head>
     <link rel="stylesheet" href="~/css/map.css" />
-
 </head>
 
 <div>
@@ -22,13 +22,18 @@
                 </p>
             </div>
             <div class="functional-buttons-container">
-                <button id="editDevicesButton">
+                <button id="editDevicesButton" class="editButtons">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen h-4 w-4 mr-1" data-lov-id="src/pages/OfficeMap.tsx:1055:18" data-lov-name="Edit" data-component-path="src/pages/OfficeMap.tsx" data-component-line="1055" data-component-file="OfficeMap.tsx" data-component-name="Edit" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20mr-1%22%7D"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path></svg>
                     Редактировать устройства
                 </button>
-                <button>
+                <button id="editEnvironmentButton" class="editButtons">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-building h-4 w-4 mr-1" data-lov-id="src/pages/OfficeMap.tsx:1065:18" data-lov-name="Building" data-component-path="src/pages/OfficeMap.tsx" data-component-line="1065" data-component-file="OfficeMap.tsx" data-component-name="Building" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20mr-1%22%7D"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect><path d="M9 22v-4h6v4"></path><path d="M8 6h.01"></path><path d="M16 6h.01"></path><path d="M12 6h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M16 10h.01"></path><path d="M16 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>
                     Изменить планировку
+                </button>
+
+                <button id="addEnvButton" class="editButtons" style="display: none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-building h-4 w-4 mr-1" data-lov-id="src/pages/OfficeMap.tsx:1065:18" data-lov-name="Building" data-component-path="src/pages/OfficeMap.tsx" data-component-line="1065" data-component-file="OfficeMap.tsx" data-component-name="Building" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20mr-1%22%7D"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect><path d="M9 22v-4h6v4"></path><path d="M8 6h.01"></path><path d="M16 6h.01"></path><path d="M12 6h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M16 10h.01"></path><path d="M16 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>
+                    Добавить комнату
                 </button>
             </div>
         </div>
@@ -61,7 +66,18 @@
                                          style="width: @(location.Width)px;
                                         height: @(location.Height)px;
                                         top: @(location.PositionY)px;
-                                        left: @(location.PositionX)px;">
+                                        left: @(location.PositionX)px;"
+
+                                        onclick="openEnvEditModal(this)"
+                                        data-id="@location.Id"
+                                        data-position-x="@location.PositionX"
+                                        data-position-y="@location.PositionY"
+                                        data-width="@location.Width"
+                                        data-height="@location.Height"
+                                        data-name="@location.Name"
+                                        data-floor-id="@location.Floor.Id"
+                                        data-location-id="@location.Location.Id"
+                                    >
                                         <div class="location-name">
                                             @location.Name
                                         </div>
@@ -199,21 +215,115 @@
     </div>
 </div>
 
+<div class="modal fade" id="editEnvModal" tabindex="-1" aria-labelledby="editEnvModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="min-width: 600px">
+            <div class="modal-header">
+                <h2 class="modal-title" id="editEnvironmentModalLabel">Редактировать планировку</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+             <form asp-action="Delete" style="width: 100%">
+                    <input id="deleteEnvId" name="Id" type="hidden" />
+                    <button asp-action="" asp-route-id="" class="button" style="float: right; border-color: red; color: red; background-color: white">Удалить</button>
+            </form>
+            <div class="modal-body">
+                <form id="editEnvForm" asp-action="EditEnvironment">
+                    <input type="hidden" id="envId" name="Id" />
+                    <div class="mb-3">
+                        <label for="envName" class="form-label">Название</label>
+                        <input type="text" class="form-control" id="envName" name="Name" />
+                    </div>
+
+                    <div>
+                        <label for="envLocation" class="form-label">Отдел</label>
+                        <select class="form-select" id="envLocation" name="LocationId">
+                            @foreach(Location location in allLocations){
+                                <option value="@location.Id">@location.Name</option>
+                            }
+                        </select>
+
+                        <div>
+                            <a asp-action="">
+                                <svg class="w-6 h-6 text-red-500 icon-svg">
+                                    <use href="#icon-plus"></use>
+                                </svg>
+                                Создать новый отдел
+                            </a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="equipmentFloor" class="form-label">Этаж</label>
+                        <select class="form-select" id="envFloor" name="FloorId">
+                            @foreach(Floor floor in floors){
+                                <option value="@floor.Id">@floor.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="equipmentPositionY" class="form-label">Позиция Y</label>
+                        <input type="number" class="form-control" id="envPositionY" name="PositionY" min="0" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipmentPositionX" class="form-label">Позиция X</label>
+                        <input type="number" class="form-control" id="envPositionX" name="PositionX" min="0" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipmentPositionY" class="form-label">Ширина</label>
+                        <input type="number" class="form-control" id="envWidth" name="Width" min="0" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipmentPositionX" class="form-label">Высота</label>
+                        <input type="number" class="form-control" id="envHeight" name="Height" min="0" />
+                    </div>
+
+                    <div style="justify-content: flex-end; flex-direction: row; display: flex;">
+                        
+                        <button class="button cancel-modal" onclick="closeEnvEditModal()">Отменить</button>
+                        <button type="submit" class="button submit-advertisement">Сохранить</button>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         let isEditMode = false;
+        let isEditEnvMode = false;
 
         document.getElementById('editDevicesButton').addEventListener('click', function () {
             isEditMode = !isEditMode;
+            $('#editEnvironmentButton').prop('disabled', isEditMode);
+
             const equipmentItems = document.querySelectorAll('.equipment-item');
             equipmentItems.forEach(item => {
-                item.setAttribute('data-edit-mode', isEditMode);
+                item.setAttribute('equipment-edit-mode', isEditMode);
                 item.style.cursor = isEditMode ? 'pointer' : 'default';
             });
             this.textContent = isEditMode ? 'Завершить редактирование' : 'Редактировать устройства';
             this.style.background = isEditMode ? 'black' : 'white';
             this.style.color = isEditMode ? 'white' : 'black';
                     const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen h-4 w-4 mr-1" data-lov-id="src/pages/OfficeMap.tsx:1055:18" data-lov-name="Edit" data-component-path="src/pages/OfficeMap.tsx" data-component-line="1055" data-component-file="OfficeMap.tsx" data-component-name="Edit" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20mr-1%22%7D"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path></svg>';
+            this.innerHTML = `${svg} ${this.textContent}`;
+        });
+
+        document.getElementById('editEnvironmentButton').addEventListener('click', function () {
+            isEditEnvMode = !isEditEnvMode;
+            $('#editDevicesButton').prop('disabled', isEditEnvMode);
+            document.getElementById('addEnvButton').style.display = isEditEnvMode ? "flex" : "none";
+            const locations = document.querySelectorAll('.location');
+            locations.forEach(item => {
+                item.setAttribute('environment-edit-mode', isEditEnvMode);
+                item.style.cursor = isEditEnvMode ? 'pointer' : 'default';
+            });
+            this.textContent = isEditEnvMode ? 'Завершить редактирование' : 'Изменить планировку';
+            this.style.background = isEditEnvMode ? 'black' : 'white';
+            this.style.color = isEditEnvMode ? 'white' : 'black';
+                    const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-building h-4 w-4 mr-1" data-lov-id="src/pages/OfficeMap.tsx:1065:18" data-lov-name="Building" data-component-path="src/pages/OfficeMap.tsx" data-component-line="1065" data-component-file="OfficeMap.tsx" data-component-name="Building" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20mr-1%22%7D"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect><path d="M9 22v-4h6v4"></path><path d="M8 6h.01"></path><path d="M16 6h.01"></path><path d="M12 6h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M16 10h.01"></path><path d="M16 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>';
             this.innerHTML = `${svg} ${this.textContent}`;
         });
 
@@ -230,7 +340,6 @@
                     content.classList.remove('active');
                 });
 
-                console.log(tab)
                 const target = document.getElementById('tab-' + tab);
                 if (target) {
                     target.classList.add('active');
@@ -239,7 +348,7 @@
         });
 
         function openEditModal(element) {
-            if (element.getAttribute('data-edit-mode') !== 'true')
+            if (element.getAttribute('equipment-edit-mode') !== 'true')
                 return;
 
             // Получаем данные из атрибутов data-*
@@ -268,6 +377,45 @@
         document.getElementById('editEquipmentModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeEditModal();
+            }
+        });
+
+        function openEnvEditModal(element) {
+            if (element.getAttribute('environment-edit-mode') !== 'true')
+                return;
+
+            // Получаем данные из атрибутов data-*
+            const id = element.getAttribute('data-id');
+            const name = element.getAttribute('data-name');
+            const floor  = element.getAttribute('data-floor-id');
+            const location = element.getAttribute('data-location-id');
+            const positionX = element.getAttribute('data-position-x');
+            const positionY = element.getAttribute('data-position-y');
+            const width = element.getAttribute('data-width');
+            const height = element.getAttribute('data-height');
+
+            // Заполняем форму в модальном окне
+            document.getElementById('envId').value = id;
+            document.getElementById('deleteEnvId').value = id;
+            document.getElementById('envName').value = name;
+            document.getElementById('envPositionX').value = positionX;
+            document.getElementById('envPositionY').value = positionY;
+            document.getElementById('envWidth').value = width;
+            document.getElementById('envHeight').value = height;
+            document.getElementById('envLocation').value = location;
+            document.getElementById('envFloor').value = floor;
+
+            // Открываем модальное окно (для Bootstrap)
+            document.getElementById('editEnvModal').classList.add('active');
+        }
+
+        function closeEnvEditModal() {
+            document.getElementById('editEnvModal').classList.remove('active');
+        }
+         // Закрытие модального окна при клике вне контента
+        document.getElementById('editEnvModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEnvEditModal();
             }
         });
     </script>

@@ -194,7 +194,7 @@
                                     </div>
                                     <div class="task-record-date-status">
                                         <span class="task-record-date">Срок: @task.DeadLine.ToString("MM/dd/yyyy")</span>
-                                        <div class="task-record-status @(task.Status.Equals("Выполнено") ? "done" : task.Status.Equals("В процессе") ? "inprogress" : "waiting")">@task.Status</div>
+                                        <div class="task-record-status @(task.Status.Equals("Выполнено") ? "done" : task.Status.Equals("В работе") ? "inprogress" : "waiting")">@task.Status</div>
                                     </div>
                                     @if (ViewBag.SectionName.Equals("IT-отдел") || User.IsInRole("Admin"))
                                     {
@@ -206,7 +206,7 @@
                                                 </button>
                                             </form>
                                         }
-                                        @if (task.Status == "В процессе")
+                                        @if (task.Status == "В работе")
                                         {
                                             <form asp-action="SetCompleted" asp-controller="Task" asp-route-id="@task.Id" method="post">
                                                 <button class="task-record-button" type="submit" style="background: linear-gradient(160deg, #DAFFE8 0%, #81FFB0 100%)">

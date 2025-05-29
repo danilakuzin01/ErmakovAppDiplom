@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+@inject SignInManager<User> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -119,14 +123,28 @@
                     <button class="btn ">
                         <svg class="icon2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-component-line="42" data-component-content="%7B%22className%22%3A%22h-5%20w-5%20text-muted-foreground%22%7D"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path></svg>
                     </button>
-                    <button class="btn">
+                    <button class="btn" id="popoverButton">
                         <svg class="icon2">
-                            @* <use href="#icon-user"></use> *@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon2">
                                 <use href="#icon-user"></use>
                             </svg>
                         </svg>
                     </button>
+                    <div class="popover" id="popover">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            var user = await UserManager.GetUserAsync(User);
+                            <div class="user-info" style="font-weight: 600; color: black">
+                                @user.LastName @user.FirstName @user.SecondName
+                            </div>
+                            <div>
+                                @user.Post.Name
+                            </div>
+                        }
+                        <div style="margin-top: 10px">
+                            <a asp-action="Logout" asp-controller="Auth" style="color: red">Выйти</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -167,6 +185,25 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        const button = document.getElementById('popoverButton');
+        const popover = document.getElementById('popover');
+
+        button.addEventListener('click', () => {
+          const rect = button.getBoundingClientRect();
+          popover.style.left = rect.left + window.scrollX + "px";
+          popover.style.top = rect.bottom + window.scrollY + "px";
+
+          popover.style.display = (popover.style.display === 'block') ? 'none' : 'block';
+        });
+
+        // Скрытие при клике вне
+        document.addEventListener('click', (e) => {
+          if (!button.contains(e.target) && !popover.contains(e.target)) {
+            popover.style.display = 'none';
+          }
+        });
+    </script>
     @* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

@@ -47,7 +47,7 @@ namespace ErmakovAppDiplom.Repositories
         {
             return _context.Tasks
                 .Include(t => t.User)
-                .Where(t => t.Status.Equals("В процессе"))
+                .Where(t => t.Status.Equals("В работе"))
                 .ToList();
         }
 
@@ -65,7 +65,7 @@ namespace ErmakovAppDiplom.Repositories
             return _context.Tasks
                 .Include(t => t.User)
                 .Where(t => t.User.Id == user.Id)
-                .Where(t => t.Status.Equals("В процессе"))
+                .Where(t => t.Status.Equals("В работе"))
                 .ToList();
         }
 

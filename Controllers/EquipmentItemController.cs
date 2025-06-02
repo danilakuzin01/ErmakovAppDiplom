@@ -53,16 +53,6 @@ namespace ErmakovAppDiplom.Controllers
             return View("Index", equipmentItems);
         }
 
-        public IActionResult Details(int id)
-        {
-            EquipmentItem equipmentItem = _repository.GetById(id);
-            if (equipmentItem == null)
-            {
-                return NotFound();
-            }
-            return View(equipmentItem);
-        }
-
         [HttpPost]
         public IActionResult Create(EquipmentItemCreateViewModel itemCreateVM)
         {
@@ -93,6 +83,8 @@ namespace ErmakovAppDiplom.Controllers
             existItem.Category = _categoryRepository.GetById(equipmentItem.CategoryId);
             existItem.Status = equipmentItem.Status;
             existItem.InventoryNumber = equipmentItem.InventoryNumber; 
+            existItem.PositionX = equipmentItem.PositionX;
+            existItem.PositionY = equipmentItem.PositionY;
             existItem.SubLocation = !equipmentItem.SubLocationId.Equals(null)
                 ? _subLocationRepository.GetById(equipmentItem.SubLocationId.Value)
                 : null;

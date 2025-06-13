@@ -308,3 +308,32 @@
     color: red;
 }
 
+.shortDetailsUserName {
+    border-radius: 9999px;
+    overflow: hidden;
+    flex-shrink: 0;
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    position: relative;
+    border-width: 0px;
+    border-style: solid;
+    margin-top: 10px;
+}
+
+.circleDetailsUserName {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background-color: #f1f5f9;
+    color: black;
+}
+
+.detailsParametrs {
+    font-size: .875rem;
+    line-height: 1.25rem;
+    color: black;
+}

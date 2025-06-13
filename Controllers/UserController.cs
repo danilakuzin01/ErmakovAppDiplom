@@ -49,7 +49,8 @@ namespace ErmakovAppDiplom.Controllers
                     SectionName = user.Section?.Name,
                     Email = user.Email,
                     IsActive = user.IsActive,
-                    Roles = roles.ToList()
+                    Roles = roles.ToList(),
+                    ItemNames = user.Items == null ? new List<string>() : user.Items.Select(i => i.Name).ToList()
                 });
             }
 
@@ -73,16 +74,23 @@ namespace ErmakovAppDiplom.Controllers
                     var roles = await _userManager.GetRolesAsync(user);
                     userViewModels.Add(new UserTableViewModel
                     {
+                        Id = user.Id,
                         FirstName = user.FirstName,
                         SecondName = user.SecondName,
                         LastName = user.LastName,
+                        PhoneNumber = user.PhoneNumber,
                         PostName = user.Post?.Name,
+                        PostId = user.Post?.Id,
                         LocationName = user.Sublocation?.Location.Name,
+                        LocationId = user.Sublocation?.Location.Id,
                         SublocationName = user.Sublocation?.Name,
+                        SublocationId = user.Sublocation?.Id,
                         SectionName = user.Section?.Name,
+                        SectionId = user.Section?.Id,
                         Email = user.Email,
                         IsActive = user.IsActive,
-                        Roles = roles.ToList()
+                        Roles = roles.ToList(),
+                        ItemNames = user.Items == null ? new List<string>() : user.Items.Select(i => i.Name).ToList()
                     });
                 }
             }
@@ -120,6 +128,79 @@ namespace ErmakovAppDiplom.Controllers
                 ModelState.AddModelError("", error.Description);
 
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(UserUpdateViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Некорректные данные");
+
+            var user = await _userManager.FindByIdAsync(model.Id);
+            if (user == null)
+                return NotFound();
+
+            // Обновление основных полей
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.SecondName = model.SecondName;
+            user.Email = model.Email;
+            user.PhoneNumber = model.Phone;
+            user.PostId = model.PostId;
+            user.SectionId = model.SectionId;
+            user.SublocationId = model.SublocationId;
+
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+                return BadRequest("Ошибка при обновлении пользователя");
+
+            // Обновление роли, если она изменилась
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            if (!currentRoles.Contains(model.Role))
+            {
+                var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                if (!removeResult.Succeeded)
+                    return BadRequest("Ошибка при удалении предыдущих ролей");
+
+                var addResult = await _userManager.AddToRoleAsync(user, model.Role);
+                if (!addResult.Succeeded)
+                    return BadRequest("Ошибка при добавлении новой роли");
+            }
+
+            // Обновление пароля, если он был указан
+            //if (!string.IsNullOrWhiteSpace(model.Password))
+            //{
+            //    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            //    var passwordResult = await _userManager.ResetPasswordAsync(user, token, model.Password);
+
+            //    if (!passwordResult.Succeeded)
+            //        return BadRequest("Ошибка при смене пароля");
+            //}
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index"); // Перенаправление после удаления
+            }
+
+            // Обработка ошибок
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            return View("Error"); // Или другая обработка ошибок
         }
     }
 }

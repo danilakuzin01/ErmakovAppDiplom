@@ -29,15 +29,22 @@ namespace ErmakovAppDiplom.Repositories
 
         public List<User> GetAll()
         {
-            var users = _userManager.Users.ToList();
+            var users = _userManager.Users
+                .Include(u => u.Items)
+                .Include(u => u.Post)
+                .Include(u => u.Section)
+                .Include(u => u.Sublocation)
+                    .ThenInclude(s => s.Location)
+                .ToList();
 
-            foreach (var user in users)
-            {
-                _context.Entry(user).Reference(u => u.Sublocation).Load();
-                _context.Entry(user).Reference(u => u.Post).Load();
-                _context.Entry(user).Reference(u => u.Section).Load();
-                _context.Entry(user.Sublocation).Reference(sl => sl.Location).Load(); // если нужно
-            }
+            //foreach (var user in users)
+            //{
+            //    _context.Entry(user).Collection(u => u.Items).Load();
+            //    _context.Entry(user).Reference(u => u.Sublocation).Load();
+            //    _context.Entry(user).Reference(u => u.Post).Load();
+            //    _context.Entry(user).Reference(u => u.Section).Load();
+            //    _context.Entry(user.Sublocation).Reference(sl => sl.Location).Load(); // если нужно
+            //}
 
             return users;
         }
@@ -55,6 +62,7 @@ namespace ErmakovAppDiplom.Repositories
         public List<User> GetAllByFilter(UserFilterViewModel userFilter)
         {
             IQueryable<User> users = _context.Users
+                .Include(u => u.Items)
                 .Include(u => u.Post)
                 .Include(u => u.Section);
 

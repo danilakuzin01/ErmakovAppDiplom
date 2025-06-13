@@ -17,9 +17,7 @@ namespace ErmakovAppDiplom.Models
         public bool IsActive { get; set; }
 
         // Навигационные свойства
-        public ICollection<BoardNote> BoardNotesAsOwner { get; set; } = new List<BoardNote>();
-        public ICollection<BoardNote> BoardNotesAsReceiver { get; set; } = new List<BoardNote>();
-        public List<ToDoList> ToDoList { get; set; }
+        public List<EquipmentItem> Items { get; set; }
 
         public override string ToString()
         {

@@ -13,6 +13,8 @@ namespace ErmakovAppDiplom.Models
         public int CategoryId { get; set; } // Внешний ключ
         public Category Category { get; set; } // Навигационное свойство
         public string InventoryNumber { get; set; }
+
+        public string? UserId { get; set; } // Обязательно для связи
         public User? User { get; set; }
         public string Status { get; set; }
 

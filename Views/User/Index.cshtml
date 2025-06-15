@@ -1,8 +1,13 @@
-﻿@using ErmakovAppDiplom.Models.ViewModel
+﻿@using ErmakovAppDiplom.Models.ViewModel 
+@using System.Text.Json
 @model List<UserTableViewModel>;
 
 @{
     ViewData["Title"] = "Пользователи";
+    List<Post> posts = ViewBag.Posts;
+    List<Section> sections = ViewBag.Sections;
+    List<SubLocation> subLocations = ViewBag.SubLocations;
+    var selectedRole = ViewBag.RoleSearch as string ?? "";
 }
 
 <head>
@@ -20,8 +25,7 @@
                     Управление сотрудниками и их доступами
                 </p>
             </div>
-            <button class="add-user-button">
-
+            <button class="add-user-button" onclick="openEmployeeModal()">
                 <svg width="1rem" height="1rem" class="w-6 h-6 text-red-500">
                     <use href="#icon-plus"></use>
                 </svg>
@@ -29,29 +33,32 @@
             </button>
         </div>
         <div class="user-container-body">
-            <div class="user-body-search-filter">
+            <form asp-action="Index" method="get" class="user-body-search-filter">
                 <div class="search-container">
                     <svg width="1rem" height="1rem" class="w-6 h-6 text-red-500">
                         <use href="#icon-search"></use>
                     </svg>
-                    <input />
+                    <input name="Search" placeholder="Имя, фамилия, email, должность..." value="@ViewBag.Search" />
                 </div>
                 <div style="display: flex; gap: .5rem;">
                     <div class="filter-status-button-container">
                         <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter h-4 w-4 text-gray-400" data-lov-id="src/pages/Equipment.tsx:419:16" data-lov-name="Filter" data-component-path="src/pages/Equipment.tsx" data-component-line="419" data-component-file="Equipment.tsx" data-component-name="Filter" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20text-gray-400%22%7D"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                        <select class="types-select">
+                        <select class="types-select" name="RoleId">
                             <option value="all">Все роли</option>
-                            <option value="status1">Администраторы</option>
-                            <option value="status2">Пользователи</option>
+                            <option selected="@(selectedRole == "Admin" ? "selected" : null)" value="Admin">Администраторы</option>
+                            <option selected="@(selectedRole == "User" ? "selected" : null)" value="User">Пользователи</option>
                         </select>
                     </div>
-                    <select class="types-select">
-                        <option value="all">Все отделы</option>
-                        <option value="type1">Руководство</option>
-                        <option value="type2">Бухгалтерия</option>
+                    <select class="types-select" name="SectionId">
+                        <option value="0">Все отделы</option>
+                        @foreach (Section sec in sections)
+                        {
+                            <option selected="@(ViewBag.SectionSearch == sec.Id ? "selected" : null)" value="@sec.Id">@sec.Name</option>
+                        }
                     </select>
+                    <button type="submit" class="filter-button">Фильтр</button>
                 </div>
-            </div>
+            </form>
             <div style="width:100%">
 
                 <div class="content">
@@ -59,11 +66,11 @@
                         <button class="task-tab-button active" data-tab="spisok" role="tab" aria-selected="true">Список</button>
                         <button class="task-tab-button" role="tab" data-tab="plitka">Плитка</button>
                     </div>
-                    <div id="tabContents">
+                    <div id="tabContents" class="tabContent">
                         <div class="task-tab-content active" id="tab-spisok">
                             <table class="table-spisok">
                                 <thead>
-                                    <tr>
+                                    <tr style="background-color: #f9fafb;">
                                         <th>Сотрудник</th>
                                         <th>Должность</th>
                                         <th>Отдел</th>
@@ -73,7 +80,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach(UserTableViewModel user in Model)
+                                    @foreach (UserTableViewModel user in Model)
                                     {
                                         <tr>
                                             <td>
@@ -81,7 +88,7 @@
                                                     <div style="width: 2.5rem; height: 2.5rem; flex-shrink: 0">
                                                         <span class="user-avatar">
                                                             <span style="align-items: center; width: 100%; height: 100%;justify-content: center; display: flex;">
-                                                                @user.LastName[0]@user.FirstName[0]@user.SecondName[0]
+                                                                @user.LastName[0]@user.FirstName[0]@(user.SecondName == null ? "" : user.SecondName[0])
                                                             </span>
                                                         </span>
                                                     </div>
@@ -118,15 +125,19 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <button class="user-table-button">
+                                                <button class="user-table-button" onclick='openDetailEmployeeModal(@Html.Raw(Json.Serialize(user)))'>
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                                 </button>
-                                                <button class="user-table-button">
+
+                                                <button class="user-table-button" onclick='openEditEmployeeModal(@Html.Raw(Json.Serialize(user)))'>
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg>
                                                 </button>
-                                                <button class="user-table-button">
-                                                    <svg class="icon-trash" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
-                                                </button>
+
+                                                <form asp-action="Delete" asp-route-id="@user.Id" method="post" style="display: inline">
+                                                    <button type="submit" class="user-table-button" onclick="return confirm('Вы уверены, что хотите удалить?')">
+                                                        <svg class="icon-trash" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     }
@@ -144,6 +155,240 @@
     </div>
 </div>
 
+<div class="modal" id="addEmployeeModal" style="overflow-y: auto">
+    <div class="modal-content" style="top: 100px">
+        <div>
+            <h2>
+                Добавить нового сотрудника
+            </h2>
+            <p>
+                Заполните информацию о новом сотруднике
+            </p>
+        </div>
+        <form asp-action="Create" method="post">
+            <div class="modal-advertisement-form">
+                <div>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="Username" required>
+                </div>
+                <div>
+                    <label for="password">Пароль</label>
+                    <input type="text" id="password" name="Password" required>
+                </div>
+                <div>
+                    <label for="firstname">Имя</label>
+                    <input type="text" id="firstname" name="FirstName" required>
+                </div>
+                <div>
+                    <label for="lastname">Фамилия</label>
+                    <input type="text" id="lastname" name="LastName" required>
+                </div>
+                <div>
+                    <label for="secondname">Отчество</label>
+                    <input type="text" id="secondname" name="SecondName">
+                </div>
+                <div>
+                    <label for="content">Email</label>
+                    <input type="text" id="email" name="Email" required></input>
+                </div>
+                <div>
+                    <label>Должность</label>
+                    <select name="PostId">
+                        @if (posts != null)
+                        {
+                            @foreach (Post post in posts)
+                            {
+                                <option value="@post.Id">@post.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label>Отдел</label>
+                    <select name="SectionId">
+                        @foreach (Section sec in sections)
+                        {
+                            <option value="@sec.Id">@sec.Name</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label>Роль</label>
+                    <select name="Role">
+                        <option value="User">Пользователь</option>
+                        <option value="Admin">Администратор</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="Phone">Контактный телефон</label>
+                    <input type="text" id="Phone" name="Phone" />
+                </div>
+                <div>
+                    <label>Номер кабинета</label>
+                    <select name="SublocationId">
+                        @if (subLocations != null)
+                        {
+                            @foreach (SubLocation sub in subLocations)
+                            {
+                                <option value="@sub.Id">@sub.Location.Name (@sub.Name)</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div style="justify-content: flex-end; flex-direction: row; display: flex;">
+                <button class="button cancel-modal" onclick="closeEmployeeModal()">Отменить</button>
+                <button type="submit" class="button submit-advertisement">Сохранить</button>
+            </div>
+        </form>
+        <button class="modal-close" onclick="closeEmployeeModal()">&times;</button>
+    </div>
+</div>
+
+<div class="modal" id="DetailEmployeeModal" style="overflow-y: auto">
+    <div class="modal-content">
+        <div>
+            <h2>
+                Информация о пользователе
+            </h2>
+        </div>
+        <div class="modal-advertisement-form">
+            <div style="align-items: center; display: flex">
+                <span class="shortDetailsUserName">
+                    <span id="detailUserShortName" class="circleDetailsUserName">ААА</span>
+                </span>
+                <div style="margin-left: 1rem;">
+                    <h3 id="detailsUserFullName" style="color: black; margin: 0;">Иванов Иван Иванович</h3>
+                    <p id="detailsUserEmail">ivan@mail.ru</p>
+                </div>
+                
+            </div>
+            <div style="gap: .5rem; display: grid; margin-top: 10px">
+                <div style="display: flex; justify-content: space-between">
+                    <span class="detailsParametrs" style="font-weight:600">Должность:</span>
+                    <span id="detailsUserPost" class="detailsParametrs">Должность</span>
+                </div>
+                <div style="display: flex; justify-content: space-between">
+                    <span class="detailsParametrs" style="font-weight:600">Отдел:</span>
+                    <span id="detailsUserSection" class="detailsParametrs">Должность</span>
+                </div>
+                <div style="display: flex; justify-content: space-between">
+                    <span class="detailsParametrs" style="font-weight:600">Роль:</span>
+                    <span id="detailsRole" class="detailsParametrs">Должность</span>
+                </div>
+                <div style="display: flex; justify-content: space-between">
+                    <span class="detailsParametrs" style="font-weight:600">Контакт:</span>
+                    <span id="detailsPhone" class="detailsParametrs">Должность</span>
+                </div>
+                <div style="display: flex; justify-content: space-between">
+                    <span class="detailsParametrs" style="font-weight:600">Размещение:</span>
+                    <span id="detailsSubLocation" class="detailsParametrs">Должность</span>
+                </div>
+                <div style="display: flex; justify-content: space-between">
+                    <span class="detailsParametrs" style="font-weight:600">Статус:</span>
+                    <span id="detailsStatus" class="detailsParametrs">Должность</span>
+                </div>
+            </div>
+            <div style="gap: .5rem; display: grid; margin-top: 20px">
+                <span class="detailsParametrs" style="font-weight:600">Закрепленное оборудование:</span>
+                <div id="detailsEquipment">
+                </div>
+            </div>
+        </div>
+        <button class="modal-close" onclick="closeDetailEmployeeModal()">&times;</button>
+    </div>
+</div>
+
+<div class="modal" id="editEmployeeModal" style="overflow-y: auto">
+    <div class="modal-content" style="top: 10px">
+        <div>
+            <h2>
+                Редактировать пользователя
+            </h2>
+            <p>
+                Измените информацию о пользователе
+            </p>
+        </div>
+        <form asp-action="Update" method="post">
+            <input type="hidden" id="edit-user-id" name="id" />
+            <div class="modal-advertisement-form">
+                <!-- <div>
+                    <label for="username">Username</label>
+                    <input type="text" id="edit-username" name="Username" required>
+                </div>
+                 <div>
+                    <label for="password">Пароль</label>
+                    <input type="text" id="edit-password" name="Password" required>
+                </div> -->
+                <div>
+                    <label for="firstname">Имя</label>
+                    <input type="text" id="edit-firstname" name="FirstName" required>
+                </div>
+                <div>
+                    <label for="lastname">Фамилия</label>
+                    <input type="text" id="edit-lastname" name="LastName" required>
+                </div>
+                <div>
+                    <label for="secondname">Отчество</label>
+                    <input type="text" id="edit-secondname" name="SecondName">
+                </div>
+                <div>
+                    <label for="content">Email</label>
+                    <input type="text" id="edit-email" name="Email" required></input>
+                </div>
+                <div>
+                    <label>Должность</label>
+                    <select name="PostId" id="edit-post">
+                        @if (posts != null)
+                        {
+                            @foreach (Post post in posts)
+                            {
+                                <option value="@post.Id">@post.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label>Отдел</label>
+                    <select name="SectionId" id="edit-section">
+                        @foreach (Section sec in sections)
+                        {
+                            <option value="@sec.Id">@sec.Name</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label>Роль</label>
+                    <select name="Role" id="edit-role">
+                        <option value="User">Пользователь</option>
+                        <option value="Admin">Администратор</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="Phone">Контактный телефон</label>
+                    <input type="text" id="edit-phone" name="Phone" />
+                </div>
+                <div>
+                    <label>Номер кабинета</label>
+                    <select name="SublocationId" id="edit-sublocation">
+                        @if (subLocations != null)
+                        {
+                            @foreach (SubLocation sub in subLocations)
+                            {
+                                <option value="@sub.Id">@sub.Location.Name (@sub.Name)</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div style="justify-content: flex-end; flex-direction: row; display: flex;">
+                <button class="button cancel-modal" onclick="closeEditEmployeeModal()">Отменить</button>
+                <button type="submit" class="button submit-advertisement">Сохранить</button>
+            </div>
+        </form>
+        <button class="modal-close" onclick="closeEditEmployeeModal()">&times;</button>
+    </div>
+</div>
 
 @section Scripts {
     <script>
@@ -167,5 +412,112 @@
             });
         });
 
+        function openDetailEmployeeModal(user) {
+            document.getElementById('detailUserShortName').innerText =
+            (user.lastName?.charAt(0) ?? "") + (user.firstName?.charAt(0) ?? "") + (user.secondName?.charAt(0) ?? "");
+
+            document.getElementById('detailsUserFullName').innerText =
+                `${user.lastName} ${user.firstName} ${user.secondName ?? ""}`;
+
+            document.getElementById('detailsUserEmail').innerText = user.email;
+            document.getElementById('detailsUserPost').innerText = user.postName ?? "";
+            document.getElementById('detailsUserSection').innerText = user.sectionName ?? "";
+            document.getElementById('detailsRole').innerText = user.roles?.[0] === 'Admin' ? 'Администратор' : 'Пользователь';
+            document.getElementById('detailsPhone').innerText = user.phoneNumber ?? "";
+            document.getElementById('detailsSubLocation').innerText = user.locationName + ' - ' + (user.sublocationName ?? "");
+            document.getElementById('detailsStatus').innerText = user.isActive ? 'Активен' : 'Неактивен';
+            console.log(user)
+            // Оборудование
+            const equipmentContainer = document.getElementById('detailsEquipment');
+            equipmentContainer.innerHTML = '';
+            if (user.itemNames?.length > 0) {
+                user.itemNames.forEach(i => {
+                    const div = document.createElement('div');
+                    div.innerText = i;
+                    div.style.color="black";
+                    div.style.backgroundColor="#f1f5f9";
+                    div.style.padding=".5rem";
+                    div.style.borderRadius=".25rem";
+                    equipmentContainer.appendChild(div);
+                });
+            } else {
+                equipmentContainer.innerText = 'Нет оборудования';
+            }
+
+            document.getElementById('DetailEmployeeModal').classList.add('active');
+        }
+
+        function closeDetailEmployeeModal() {
+            document.getElementById('DetailEmployeeModal').classList.remove('active');
+        }
+
+        // Закрытие модального окна при клике вне контента
+        document.getElementById('DetailEmployeeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDetailEmployeeModal();
+            }
+        });
+
+        function openEmployeeModal() {
+            document.getElementById('addEmployeeModal').classList.add('active');
+        }
+
+        function closeEmployeeModal() {
+            document.getElementById('addEmployeeModal').classList.remove('active');
+        }
+
+        // Закрытие модального окна при клике вне контента
+        document.getElementById('addEmployeeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEmployeeModal();
+            }
+        });
+
+        function openEditEmployeeModal(user) {
+            // document.getElementById('edit-username').value = user.userName ?? '';
+            // document.getElementById('edit-password').value = ''; // Пароль не показывается — можно оставить пустым
+            document.getElementById('edit-firstname').value = user.firstName ?? '';
+            document.getElementById('edit-lastname').value = user.lastName ?? '';
+            document.getElementById('edit-secondname').value = user.secondName ?? '';
+            document.getElementById('edit-email').value = user.email ?? '';
+            document.getElementById('edit-phone').value = user.phoneNumber ?? '';
+
+            console.log(user)
+
+            document.getElementById('edit-post').value = user.postId?.toString() ?? '';
+            document.getElementById('edit-section').value = user.sectionId?.toString() ?? '';
+            document.getElementById('edit-sublocation').value = user.sublocationId?.toString() ?? '';
+
+            const roleSelect = document.getElementById('edit-role');
+            if (user.roles?.[0] === "Admin") {
+                roleSelect.value = "Admin";
+            } else {
+                roleSelect.value = "User";
+            }
+
+            // Добавить ID в hidden input, если он есть
+            let hiddenId = document.getElementById('edit-user-id');
+            if (!hiddenId) {
+                hiddenId = document.createElement('input');
+                hiddenId.type = 'hidden';
+                hiddenId.name = 'Id';
+                hiddenId.id = 'edit-user-id';
+                document.querySelector('#editEmployeeModal form').appendChild(hiddenId);
+            }
+            hiddenId.value = user.id;
+
+            document.getElementById('editEmployeeModal').classList.add('active');
+        }
+
+        function closeEditEmployeeModal() {
+            document.getElementById('editEmployeeModal').classList.remove('active');
+        }
+
+        // Закрытие модального окна при клике вне контента
+        document.getElementById('editEmployeeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditEmployeeModal();
+            }
+        });
     </script>
 }

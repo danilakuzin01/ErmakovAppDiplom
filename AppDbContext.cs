@@ -28,20 +28,6 @@ namespace ErmakovAppDiplom
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            // Связь "Один ко многим" для Owner
-            builder.Entity<BoardNote>()
-                .HasOne(b => b.Owner)
-                .WithMany(u => u.BoardNotesAsOwner)
-                .HasForeignKey(b => b.OwnerId)
-                .OnDelete(DeleteBehavior.Restrict);  // Чтобы при удалении пользователя не удалялись BoardNote
-
-            // Связь "Один ко многим" для Receiver
-            builder.Entity<BoardNote>()
-                .HasOne(b => b.Receiver)
-                .WithMany(u => u.BoardNotesAsReceiver)
-                .HasForeignKey(b => b.ReceiverId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
 
     }

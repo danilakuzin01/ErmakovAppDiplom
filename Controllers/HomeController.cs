@@ -14,6 +14,7 @@ namespace ErmakovAppDiplom.Controllers
         private readonly IAdvertisementRepository _advertisementRepository;
         private readonly IUserRepository _userRepository;
         private readonly ITaskRepository _taskRepository;
+
         public HomeController(UserManager<User> userManager, IUserRepository userRepository, 
             ITaskRepository taskRepository, IAdvertisementRepository advertisementRepository)
         {
@@ -31,11 +32,23 @@ namespace ErmakovAppDiplom.Controllers
             ViewBag.UsersCount = _userRepository.GetAll().Count;
             ViewBag.AdminsCount = _userManager.GetUsersInRoleAsync("Admin").Result.Count;
             ViewBag.Advertisements = _advertisementRepository.GetAll();
-            ViewBag.InWorkTasks = _taskRepository.GetInProgress();
-            ViewBag.WaitingTasks = _taskRepository.GetWaiting();
-            ViewBag.CompletedTasks = _taskRepository.GetCompleted();
+            ViewBag.SectionName = user.Section.Name;
 
-            ViewBag.Tasks = _taskRepository.GetLastFive();
+            if (user.Section.Name.Equals("IT-отдел") || User.IsInRole("Admin"))
+            {
+                ViewBag.Tasks = _taskRepository.GetAllLastTen();
+                ViewBag.InWorkTasks = _taskRepository.GetInProgress();
+                ViewBag.WaitingTasks = _taskRepository.GetWaiting();
+                ViewBag.CompletedTasks = _taskRepository.GetCompleted();
+            }
+            else
+            {
+                ViewBag.Tasks = _taskRepository.GetAllByUser(user);
+                ViewBag.InWorkTasks = _taskRepository.GetInProgressByUser(user);
+                ViewBag.WaitingTasks = _taskRepository.GetWaitingByUser(user);
+                ViewBag.CompletedTasks = _taskRepository.GetCompletedByUser(user);
+            }
+
 
             if (user != null)
             {

@@ -5,7 +5,7 @@
     ViewData["Title"] = "Инвентарь";
     var categories = ViewBag.Categories;
     var users = ViewBag.Employees;
-
+    var locations = ViewBag.SubLocations;
 }
 <head>
     <link href="~/css/equipment.css" rel="stylesheet" />
@@ -25,30 +25,31 @@
             </button>
         </div>
         <div class="content-body">
-            <div class="filter-content">
+            <form class="filter-content" asp-action="Filter">
                 <div class="filter-search-container">
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" data-lov-id="src/pages/Equipment.tsx:409:14" data-lov-name="Search" data-component-path="src/pages/Equipment.tsx" data-component-line="409" data-component-file="Equipment.tsx" data-component-name="Search" data-component-content="%7B%22className%22%3A%22absolute%20left-3%20top-1%2F2%20transform%20-translate-y-1%2F2%20text-gray-400%20h-4%20w-4%22%7D"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-                    <input class="filter-search-container-input" type="type" name="name" value="" placeholder="Поиск по названию, модели, инвентарному номеру..." />
+                    <input class="filter-search-container-input" type="type" name="Search" value="@ViewBag.Search" placeholder="Поиск по названию, модели, инвентарному номеру..." />
                 </div>
                 <div style="display: flex; gap: .5rem;">
                     <div class="filter-status-button-container">
                         <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter h-4 w-4 text-gray-400" data-lov-id="src/pages/Equipment.tsx:419:16" data-lov-name="Filter" data-component-path="src/pages/Equipment.tsx" data-component-line="419" data-component-file="Equipment.tsx" data-component-name="Filter" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20text-gray-400%22%7D"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                        <select class="types-select">
-                            <option value="all">Все статусы</option>
-                            <option value="status1">Работает</option>
-                            <option value="status2">На обслуживании</option>
-                            <option value="status3">Неисправен</option>
+                        <select class="types-select" name="FilterStatus">
+                            <option value="all" selected="@(ViewBag.FilterStatus?.Equals("all") ? "selected" : null)">Все статусы</option>
+                            <option value="Работает" selected="@(ViewBag.FilterStatus?.Equals("Работает") ? "selected" : null)">Работает</option>
+                            <option value="На обслуживании" selected="@(ViewBag.FilterStatus?.Equals("На обслуживании") ? "selected" : null)">На обслуживании</option>
+                            <option value="Неисправен" selected="@(ViewBag.FilterStatus.Equals("Неисправен") ? "selected" : null)">Неисправен</option>
                         </select>
                     </div>
-                    <select class="types-select">
-                        <option value="all">Все категории</option>
-                        @foreach(Category category in categories)
+                    <select class="types-select" name="FilterCategoryId">
+                        <option value="0">Все категории</option>
+                        @foreach (Category category in categories)
                         {
-                            <option value="@category.Id">@category.Name</option>
+                            <option value="@category.Id" selected="@(category.Id == ViewBag.FilterCategoryId ? "selected" : null)">@category.Name</option>
                         }
                     </select>
+                    <button type="submit" class="filter-button">Фильтр</button>
                 </div>
-            </div>
+            </form>
             <div class="content">
                 <div class="equipment-tab-list">
                     <button class="task-tab-button active" data-tab="spisok" role="tab" aria-selected="true">Список</button>
@@ -56,99 +57,119 @@
                 </div>
                 <div id="tabContents">
                     <div class="task-tab-content active" id="tab-spisok">
-                        <table class="table-spisok">
-                            <thead>
-                                <tr>
-                                    <th>Тип</th>
-                                    <th>Название/Модель</th>
-                                    <th>Инв. номер</th>
-                                    <th>Статус</th>
-                                    <th>Местоположение</th>
-                                    <th>Сотрудник</th>
-                                    <th>Действия</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach(EquipmentItem item in Model)
-                                {
-                                    <tr>
-                                        <td>
-                                            <div style="align-items: center;display: flex;">
-                                                <div class="table-icon">
-                                                    <svg class="w-6 h-6 text-red-500">
-                                                        @if (item.Category.Name.Equals("Компьютер") || item.Category.Name.Equals("Монитор"))
-                                                        {
-                                                            <use href="#icon-computer" />
-                                                        }
-                                                        else if (item.Category.Name.Equals("Принтер"))
-                                                        {
-                                                            <use href="#icon-printer" />
-                                                        }
-                                                        else if (item.Category.Name.Equals("Сервер"))
-                                                        {
-                                                            <use href="#icon-server" />
-                                                        }
-                                                        else if (item.Category.Name.Equals("Сетевое оборудование")) 
-                                                        {
-                                                            <use href="#icon-internet-settings" />
-                                                        }
-                                                        else if (item.Category.Name.Equals("Камера"))
-                                                        {
-                                                            <use href="#icon-camera"/>
-                                                        }
-                                                    </svg>
-                                                </div>
-                                                <div style="margin-left: 1rem">
-                                                    <div class="equipment-category" style="font-size: .875rem;line-height: 1.25rem;color: black;font-weight: 500;">
-                                                        @item.Category.Name
+                        @if (Model != null)
+                        {
+                            <table class="table-spisok">
+                                <thead>
+                                    <tr style="background-color: #f9fafb;">
+                                        <th>Тип</th>
+                                        <th>Название/Модель</th>
+                                        <th>Инв. номер</th>
+                                        <th>Статус</th>
+                                        <th>Местоположение</th>
+                                        <th>Сотрудник</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (EquipmentItem item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div style="align-items: center;display: flex;">
+                                                    <div class="table-icon">
+                                                        <svg class="w-6 h-6 text-red-500">
+                                                            @if (item.Category.Name.Equals("Компьютер") || item.Category.Name.Equals("Монитор"))
+                                                            {
+                                                                <use href="#icon-computer" />
+                                                            }
+                                                            else if (item.Category.Name.Equals("Принтер"))
+                                                            {
+                                                                <use href="#icon-printer" />
+                                                            }
+                                                            else if (item.Category.Name.Equals("Сервер"))
+                                                            {
+                                                                <use href="#icon-server" />
+                                                            }
+                                                            else if (item.Category.Name.Equals("Сетевое оборудование"))
+                                                            {
+                                                                <use href="#icon-internet-settings" />
+                                                            }
+                                                            else if (item.Category.Name.Equals("Камера"))
+                                                            {
+                                                                <use href="#icon-camera" />
+                                                            }
+                                                        </svg>
+                                                    </div>
+                                                    <div style="margin-left: 1rem">
+                                                        <div class="equipment-category" style="font-size: .875rem;line-height: 1.25rem;color: black;font-weight: 500;">
+                                                            @item.Category.Name
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="equipment-name">
-                                                @item.Name
-                                            </div>
-                                            <div class="equipment-type">
-                                                @item.Model
-                                            </div>
-                                        </td>
-                                        <td>@item.InventoryNumber</td>
-                                        <td>
-                                            <div class="status-container work">
-                                                @item.Status
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div style="font-size: .875rem; line-height: 1.25rem; color: black">
-                                                @item.SubLocation.Location.Name
-                                            </div>
-                                            <div style="font-size: .875rem;line-height: 1.25rem;">
-                                                @item.SubLocation.Name
-                                            </div>
-                                        </td>
-                                        <td>
-                                            @item.User.ToString()
-                                        </td>
-                                        <td>
-                                            <button class="table-button edit">
-                                                <svg class="w-4 h-4 text-blue-600 mr-1" width="1rem" height="1rem">
-                                                    <use href="#icon-edit" />
-                                                </svg>
-                                                Изменить
-                                            </button>
-                                            <button class="table-button delete">
-                                                <svg class="w-4 h-4 text-red-600 mr-1" width="1rem" height="1rem">
-                                                    <use href="#icon-trash" />
-                                                </svg>
-                                                Удалить
-                                            </button>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                            <td>
+                                                <div class="equipment-name">
+                                                    @item.Name
+                                                </div>
+                                                <div class="equipment-type">
+                                                    @item.Model
+                                                </div>
+                                            </td>
+                                            <td>@item.InventoryNumber</td>
+                                            <td>
+                                                <div class="status-container work">
+                                                    @item.Status
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div style="font-size: .875rem; line-height: 1.25rem; color: black">
+                                                    @(item.SubLocation != null ? item.SubLocation.Location.Name : "-")
+                                                </div>
+                                                <div style="font-size: .875rem;line-height: 1.25rem;">
+                                                    @(item.SubLocation != null ? item.SubLocation.Name : "")
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @(item.User != null ? item.User.ToString() : "-")
+                                            </td>
+                                            <td>
+                                                <button class="table-button edit" onclick="openEditItemModal(this)"
+                                                        data-id="@item.Id"
+                                                        data-name="@item.Name"
+                                                        data-model="@item.Model"
+                                                        data-owner="@(item.User != null ? item.User?.Id : "null")"
+                                                        data-sublocation="@(item.SubLocation != null ? item.SubLocation?.Id : "null")"
+                                                        data-inventory-number="@item.InventoryNumber"
+                                                        data-status="@item.Status"
+                                                        data-category="@item.Category.Id"
+                                                        data-position-x="@item.PositionX"
+                                                        data-position-y="@item.PositionY">
+                                                    <svg class="w-4 h-4 text-blue-600 mr-1" width="1rem" height="1rem">
+                                                        <use href="#icon-edit" />
+                                                    </svg>
+                                                    Изменить
+                                                </button>
+                                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: inline-flex;">
+                                                    <button class="table-button delete" type="submit">
+                                                        <svg class="w-4 h-4 text-red-600 mr-1" width="1rem" height="1rem">
+                                                            <use href="#icon-trash" />
+                                                        </svg>
+                                                        Удалить
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
 
-                                }
-                            </tbody>
-                        </table>
+                                    }
+                                </tbody>
+                            </table>
+
+                        }
+                        else
+                        {
+                            <h2>Оборудование не найдено!</h2>
+                        }
                     </div>
 
                     <div class="task-tab-content" id="tab-plitka">
@@ -167,12 +188,12 @@
                 Добавить новое оборудование
             </h2>
         </div>
-        <form>
+        <form asp-action="Create" method="post">
             <div class="class=" modal-advertisement-form"">
                 <div>
                     <label>Тип оборудования</label>
-                    <select>
-                        @foreach(Category category in categories)
+                    <select name="CategoryId">
+                        @foreach (Category category in categories)
                         {
                             <option value="@category.Id">@category.Name</option>
                         }
@@ -184,7 +205,7 @@
                 </div>
                 <div>
                     <label for="content">Модель</label>
-                    <input type="text" id="content" name="content" required></input>
+                    <input type="text" id="Model" name="Model" required></input>
                 </div>
 
                 <div>
@@ -193,22 +214,27 @@
                 </div>
                 <div>
                     <label>Статус</label>
-                    <select>
-                        <option>Рабочее</option>
-                        <option>На обслуживании</option>
-                        <option>Неисправно</option>
+                    <select name="Status">
+                        <option value="Работает">Работает</option>
+                        <option value="На обслуживании">На обслуживании</option>
+                        <option value="Неисправен">Неисправен</option>
                     </select>
                 </div>
                 <div>
                     <label>Номер кабинета</label>
-                    <select>
-                        <option>300</option>
+                    <select name="SubLocationId" id="SubLocationId">
+                        <option value="null">Нет</option>
+                        @foreach (SubLocation location in locations)
+                        {
+                            <option value="@location.Id">@location.Name</option>
+                        }
                     </select>
                 </div>
                 <div>
                     <label>Ответсвенный сотрудник</label>
-                    <select>
-                        @foreach(User user in users)
+                    <select name="UserId">
+                        <option value="null">Нет</option>
+                        @foreach (User user in users)
                         {
                             <option>@user.LastName @user.FirstName @user.SecondName</option>
                         }
@@ -223,6 +249,87 @@
         <button class="modal-close" onclick="closeItemModal()">&times;</button>
     </div>
 </div>
+
+<div class="modal" id="editItemModal">
+    <div class="modal-content">
+        <div>
+            <h2>
+                Редактировать оборудование
+            </h2>
+        </div>
+        <form asp-action="Update" method="post">
+            <input name="Id" id="editId" hidden style="display: none" />
+            <div class="class=" modal-advertisement-form"">
+                <div>
+                    <label>Тип оборудования</label>
+                    <select name="CategoryId" id="editCategoryId">
+                        @foreach (Category category in categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label for="name">Название</label>
+                    <input type="text" id="editName" name="Name" required />
+                </div>
+                <div>
+                    <label for="content">Модель</label>
+                    <input type="text" id="editModel" name="Model" required />
+                </div>
+                <div>
+                    <label for="InventoryNumber">Инвентарный номер</label>
+                    <input type="text" id="editInventoryNumber" name="InventoryNumber" required />
+                </div>
+                <div>
+                    <label>Статус</label>
+                    <select name="Status" id="editStatus">
+                        <option value="Работает">Работает</option>
+                        <option value="На обслуживании">На обслуживании</option>
+                        <option value="Неисправен">Неисправен</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Номер кабинета</label>
+                    <select name="SubLocationId" id="editSubLocationId">
+                        <option value="null">Нет</option>
+                        @foreach (SubLocation location in locations)
+                        {
+                            <option value="@location.Id">@location.Name</option>
+                        }
+                    </select>
+
+                </div>
+                <div>
+                    <label>Ответсвенный сотрудник</label>
+                    <select name="UserId" id="editUserId">
+                        <option value="null">Нет</option>
+                        @foreach (User user in users)
+                        {
+                            <option value="@user.Id">@user.LastName @user.FirstName @user.SecondName</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="editPositionY" class="form-label">Позиция Y</label>
+                    <input type="number" class="form-control" id="editPositionY" name="editPositionY" min="0" />
+                </div>
+                <div class="mb-3">
+                    <label for="editPositionX" class="form-label">Позиция X</label>
+                    <input type="number" class="form-control" id="editPositionX" name="PositionX" min="0" />
+                </div>
+            </div>
+            <div style="justify-content: flex-end; flex-direction: row; display: flex;">
+                <button class="button cancel-modal" onclick="closeEditModal()">Отменить</button>
+                <button type="submit" class="button submit-advertisement">Сохранить</button>
+            </div>
+        </form>
+        <button class="modal-close" onclick="closeItemModal()">&times;</button>
+    </div>
+</div>
+
+
 
 @section Scripts {
     <script>
@@ -257,6 +364,44 @@
         document.getElementById('addItemModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeItemModal();
+            }
+        });
+
+        function openEditItemModal(element) {
+             // Получаем данные из атрибутов data-*
+            const id = element.getAttribute('data-id');
+            const name = element.getAttribute('data-name');
+            const model = element.getAttribute('data-model');
+            const owner = element.getAttribute('data-owner');
+            const sublocation = element.getAttribute('data-sublocation');
+            const inventory_number = element.getAttribute('data-inventory-number');
+            const category = element.getAttribute('data-category');
+            const status = element.getAttribute('data-status');
+            const positionX = element.getAttribute('data-position-x');
+            const positionY = element.getAttribute('data-position-y');
+            // Заполняем форму в модальном окне
+            document.getElementById('editId').value = id;
+            document.getElementById('editName').value = name;
+            document.getElementById('editModel').value = model;
+            document.getElementById('editUserId').value = owner != null ? owner : "null";
+            document.getElementById('editSubLocationId').value = sublocation != null ? sublocation : "null";
+            document.getElementById('editInventoryNumber').value = inventory_number;
+            document.getElementById('editCategoryId').value = category;
+            document.getElementById('editStatus').value = status;
+            document.getElementById('editPositionX').value = positionX;
+            document.getElementById('editPositionY').value = positionY;
+
+            document.getElementById('editItemModal').classList.add('active');
+        }
+
+        function closeEditItemModal() {
+            document.getElementById('editItemModal').classList.remove('active');
+        }
+
+        // Закрытие модального окна при клике вне контента
+        document.getElementById('editItemModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditItemModal();
             }
         });
     </script>
